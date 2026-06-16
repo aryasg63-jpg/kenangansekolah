@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kenangan Kelas VIII</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Inter:wght@300;400;500;600;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
+
+  <!-- ============================================================
+    PANDUAN EDIT UNTUK PEMULA:
+    
+    1. FOTO → Semua foto diambil dari folder yang sama dengan file HTML ini.
+       Buat folder "foto" di lokasi yang sama, lalu isi dengan foto kamu.
+       Format nama: siswa1.jpg, siswa2.jpg, galeri1.jpg, galeri2.jpg, dst.
+       Jika foto tidak ada, akan muncul foto placeholder otomatis.
+    
+    2. DATA → Edit bagian DATA DI BAWAH INI untuk mengubah isi website. 
+    
+    3. WARNA → Cari bagian :root { untuk mengubah warna tema.
+
+  ============================================================ -->
+
+  <style>
+    /* =========================================
+       WARNA TEMA — EDIT DI SINI
+    ========================================= */
+    :root {
+      --dark:      #0B132B;
+      --light:     #1C2541;
+      --gold:      #D4AF37;
+      --goldlight: #F4D03F;
+      --white:     #ffffff;
+      --gray:      #676f7c;
+    }
+
+    /* =========================================
+       RESET & BASE 
+       
+    ========================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--dark);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+    @media (hover: none) and (pointer: coarse) { body { cursor: auto; } }
+    img { display: block; }
+    a { text-decoration: none; color: inherit; }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--dark); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--goldlight); }
+
+    ::selection { background: var(--gold); color: var(--dark); }
+
+    /* Fonts shorthand */
+    h1, h2, h3, .serif { font-family: 'Playfair Display', serif; }
+    .handwriting { font-family: 'Dancing Script', cursive; }
+
+    /* =========================================
+       ANIMASI
+    ========================================= */
+    @keyframes marquee   { 0%{ transform:translateX(0) } 100%{ transform:translateX(-50%) } }
+    @keyframes float     { 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-20px) } }
+    @keyframes floatD    { 0%,100%{ transform:translateY(-10px) } 50%{ transform:translateY(-30px) } }
+    @keyframes pulseGlow { 0%,100%{ filter:drop-shadow(0 0 15px rgba(212,175,55,.5)) } 50%{ filter:drop-shadow(0 0 30px rgba(212,175,55,.8)) } }
+    @keyframes fadeIn    { from{ opacity:0; transform:translateY(10px) } to{ opacity:1; transform:translateY(0) } }
+    @keyframes spinBeat  { 0%,100%{ transform:scale(1) } 50%{ transform:scale(1.2) } }
+
+    .anim-float   { animation: float  6s ease-in-out infinite; }
+    .anim-floatD  { animation: floatD 6s ease-in-out 3s infinite; }
+    .anim-fadein  { animation: fadeIn .6s ease-out forwards; }
+    .anim-glow    { animation: pulseGlow 3s ease-in-out infinite; }
+    .anim-beat    { animation: spinBeat 1.5s ease-in-out infinite; }
+
+    /* FadeIn on scroll (JS adds .visible) */
+    .fade { opacity:0; transform:translateY(30px); transition: opacity .8s ease, transform .8s ease; }
+    .fade.visible { opacity:1; transform:translateY(0); }
+
+    /* =========================================
+       GLASS UTILITY
+    ========================================= */
+    .glass {
+      background: rgba(255,255,255,.03);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,.05);
+      box-shadow: 0 4px 30px rgba(0,0,0,.1);
+    }
+    .glass-strong {
+      background:rgba(20,30,55,.7);
+      backdrop-filter:blur(16px);
+      border:1px solid rgba(212,175,55,.2);
+      border-radius:1.5rem;
+      padding:2rem;
+    }
+    @media(max-width:768px) {
+      .glass-strong {
+        padding:1.5rem;
+      }
+    }
+    @media(max-width:480px) {
+      .glass-strong {
+        padding:1rem;
+        border-radius:1rem;
+      }
+    }
+    .text-stroke {
+      -webkit-text-stroke: 1px rgba(255,255,255,.2);
+      color: transparent;
+    }
+
+    /* =========================================
+       CUSTOM CURSOR
+    ========================================= */
+    #cursor-dot, #cursor-ring {
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      transition: transform .1s, width .2s, height .2s, background .2s;
+    }
+    #cursor-dot  { width:10px; height:10px; background:var(--gold); mix-blend-mode:screen; }
+    #cursor-ring { width:36px; height:36px; border:2px solid rgba(212,175,55,.5); transition:all .25s ease; }
+    body:not([data-mobile]) #cursor-dot,
+    body:not([data-mobile]) #cursor-ring { display:block; }
+    @media (hover:none) and (pointer:coarse) {
+      #cursor-dot, #cursor-ring { display:none; }
+    }
+
+    /* =========================================
+       NAVBAR
+    ========================================= */
+    #navbar {
+      position: fixed; top:0; left:0; right:0; z-index:50;
+      padding: 1.5rem 0;
+      transition: background .5s, padding .5s, box-shadow .5s;
+    }
+    #navbar.scrolled {
+      background: rgba(11,19,43,.85);
+      backdrop-filter: blur(20px);
+      padding: 1rem 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,.5);
+    }
+    .nav-inner {
+      max-width:1200px; margin:auto; padding:0 1.5rem;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .nav-logo {
+      font-family:'Playfair Display',serif;
+      font-size:1.75rem; font-weight:900;
+      color:var(--gold); letter-spacing:-.05em;
+      transition:transform .3s;
+    }
+    .nav-logo:hover { transform:scale(1.08); }
+    .nav-links { display:flex; gap:2.5rem; list-style:none; }
+    .nav-links a {
+      font-size:.75rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase;
+      position:relative; overflow:hidden;
+    }
+    .nav-links a::after {
+      content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px;
+      background:var(--gold); transition:width .3s;
+    }
+    .nav-links a:hover { color:var(--gold); }
+    .nav-links a:hover::after { width:100%; }
+
+    /* Progress bar */
+    #progress-bar {
+      position:absolute; bottom:0; left:0; height:2px;
+      background:var(--gold); box-shadow:0 0 8px var(--gold);
+      transition:width .15s ease-out;
+      width:0%;
+    }
+
+    @media(max-width:768px) { .nav-links { display:none; } }
+
+    /* =========================================
+       RESPONSIVE DESIGN - MOBILE vs DESKTOP
+    ========================================= */
+    /* Mobile First (HP) */
+    @media(max-width:768px) {
+      body { font-size:14px; }
+      .section { padding:3rem 0; }
+      .container { padding:0 1rem; }
+      .section-head { margin-bottom:2rem; }
+      .section-title { font-size:clamp(1.8rem, 5vw, 2.5rem); }
+      .hero-btn { font-size:.9rem; padding:.8rem 1.8rem; }
+      .marquee-wrap { padding:.5rem 0; }
+      .marquee-track span { font-size:1.2rem; padding-right:2rem; }
+      #music-player { bottom:1rem; right:1rem; }
+      #play-btn { width:48px; height:48px; }
+    }
+
+    /* Desktop */
+    @media(min-width:769px) {
+      body { font-size:16px; }
+      .section { padding:6rem 0; }
+    }
+
+    /* =========================================
+       HERO
+    ========================================= */
+    #hero {
+      position:relative; min-height:100vh;
+      display:flex; align-items:center; justify-content:center;
+      overflow:hidden; padding-top:5rem;
+    }
+    #hero-bg {
+      position:absolute; inset:0; z-index:0;
+    }
+    #hero-bg img {
+      width:100%; height:100%; object-fit:cover;
+      opacity:.3;
+    }
+    #hero-bg .overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to bottom, rgba(11,19,43,.4) 0%, rgba(11,19,43,.8) 60%, #0B132B 100%);
+    }
+    .orb1, .orb2 {
+      position:absolute; border-radius:50%; filter:blur(80px); pointer-events:none;
+    }
+    .orb1 { width:300px; height:300px; background:rgba(212,175,55,.2); top:25%; left:20%; animation:float 6s ease-in-out infinite; }
+    .orb2 { width:400px; height:400px; background:rgba(59,130,246,.15); bottom:20%; right:15%; animation:floatD 7s ease-in-out infinite; }
+
+    #hero-content { position:relative; z-index:10; text-align:center; padding:0 1rem; max-width:900px; }
+
+    .hero-badge {
+      display:inline-block; margin-bottom:1.5rem;
+      padding:.4rem 1.5rem; border-radius:99px;
+      border:1px solid rgba(212,175,55,.3);
+      background:rgba(212,175,55,.1); backdrop-filter:blur(10px);
+      font-size:.75rem; font-weight:700; letter-spacing:.3em; text-transform:uppercase; color:var(--gold);
+    }
+    .hero-title-outline {
+      display:block; font-size:clamp(3.5rem,10vw,7rem); font-weight:900; line-height:1;
+      letter-spacing:-.05em; color:transparent;
+      -webkit-text-stroke:1px rgba(255,255,255,.2);
+      transition:color .5s;
+    }
+    .hero-title-outline:hover { color:rgba(255,255,255,.15); }
+    .hero-title-main {
+      display:block; font-size:clamp(3.5rem,10vw,7rem); font-weight:900; line-height:1;
+      letter-spacing:-.05em;
+      background:linear-gradient(135deg, #fff 0%, var(--gold) 50%, #b8860b 100%);
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .hero-subtitle {
+      font-size:clamp(1rem,2.5vw,1.4rem); color:var(--gray);
+      margin:1.5rem auto 2.5rem; max-width:650px; font-weight:300; line-height:1.7;
+    }
+    .hero-btn {
+      display:inline-flex; align-items:center; gap:.75rem;
+      padding:1rem 2.5rem; border-radius:99px;
+      background:var(--gold); color:var(--dark);
+      font-size:1rem; font-weight:700;
+      transition:transform .3s, box-shadow .3s;
+    }
+    .hero-btn:hover { transform:scale(1.06); box-shadow:0 0 40px rgba(212,175,55,.6); }
+
+    /* =========================================
+       MARQUEE
+    ========================================= */
+    .marquee-wrap {
+  overflow:hidden; background:var(--gold);
+  padding:.75rem 0; border-top:4px solid var(--dark); border-bottom:4px solid var(--dark);
+  transform:rotate(-2deg) scaleX(1.05);
+  box-shadow:0 0 30px rgba(212,175,55,.3);
+  position:relative; z-index:20;
+}
+.marquee-track {
+  display:flex;
+  width:max-content;
+  animation:marquee 22s linear infinite;
+  white-space:nowrap;
+}
+.marquee-track span {
+  display:inline-block;
+  padding-right:4rem;
+  font-size:1.75rem; font-weight:900;
+  letter-spacing:.15em; text-transform:uppercase;
+  color:var(--dark);
+}
+
+
+    /* =========================================
+       SECTIONS GENERIC
+    ========================================= */
+    .section { padding:6rem 0; }
+    .container { max-width:1200px; margin:auto; padding:0 1.5rem; }
+
+    .section-head { text-align:center; margin-bottom:4rem; }
+    .section-title {
+      font-size:clamp(2.5rem,6vw,4.5rem); font-weight:900; line-height:1.1; margin-bottom:1rem;
+    }
+    .section-sub { color:var(--gray); font-size:1.1rem; max-width:600px; margin:auto; }
+    .gold { color:var(--gold); }
+    .italic { font-style:italic; }
+
+    /* =========================================
+       PROLOGUE
+    ========================================= */
+    #cerita { background:var(--dark); }
+    .prologue-inner { max-width:800px; margin:auto; text-align:center; }
+    .quote-icon { font-size:4rem; color:rgba(212,175,55,.3); line-height:1; margin-bottom:1.5rem; }
+    .prologue-lead {
+      font-size:clamp(1.6rem,4vw,2.5rem); font-weight:900; line-height:1.2; margin-bottom:1.5rem;
+    }
+    .prologue-text { font-size:1.1rem; color:var(--gray); line-height:1.9; margin-bottom:1rem; }
+
+    /* =========================================
+       QUOTES SLIDER
+    ========================================= */
+    #quotes-section {
+      padding:5rem 0; background:var(--light);
+      border-top:1px solid rgba(255,255,255,.05); border-bottom:1px solid rgba(255,255,255,.05);
+    }
+    #quotes-section .container { text-align:center; }
+    .quote-display { min-height:120px; display:flex; align-items:center; justify-content:center; }
+    .quote-text {
+      font-family:'Playfair Display',serif; font-style:italic; font-size:clamp(1.2rem,3vw,2rem);
+      color:var(--gold); max-width:900px; line-height:1.5;
+      animation:fadeIn .8s ease;
+    }
+
+    /* =========================================
+       STATS
+    ========================================= */
+    #stats { padding:4rem 0; position:relative; z-index:20; margin-top:-3rem; }
+    .stats-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; }
+    @media(min-width:768px) { .stats-grid { grid-template-columns:repeat(4,1fr); gap:1.5rem; } }
+
+    .stat-card {
+      padding:2rem 1rem; border-radius:1.5rem; text-align:center;
+      background:rgba(20,30,55,.7); backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.05);
+      transition:transform .4s, box-shadow .4s, border-color .4s;
+    }
+    .stat-card:hover {
+      transform:translateY(-12px);
+      box-shadow:0 20px 40px rgba(212,175,55,.15);
+      border-color:rgba(212,175,55,.4);
+    }
+    .stat-icon {
+      width:56px; height:56px; border-radius:50%;
+      background:rgba(212,175,55,.1); margin:0 auto 1rem;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.5rem; transition:background .3s, transform .3s;
+    }
+    .stat-card:hover .stat-icon { background:rgba(212,175,55,.2); transform:scale(1.15); }
+    .stat-value { font-size:2.8rem; font-weight:900; }
+    .stat-label { font-size:.7rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-top:.25rem; }
+
+    /* =========================================
+       GALERI FOTO
+    ========================================= */
+    #galeri { background:var(--dark); }
+    .gallery-header { display:flex; flex-direction:column; justify-content:space-between; align-items:flex-end; margin-bottom:3rem; gap:1rem; }
+    @media(min-width:768px) { .gallery-header { flex-direction:row; } }
+    .gallery-grid {
+      display:grid; gap:1rem;
+      grid-template-columns:repeat(2,1fr);
+    }
+    @media(min-width:768px) { .gallery-grid { grid-template-columns:repeat(4,1fr); gap:1.25rem; } }
+
+    /* Mobile vs Desktop responsive */
+    @media(max-width:480px) {
+      .section { padding:2.5rem 0; }
+      .container { padding:0 1rem; }
+      .form-input { font-size:16px; }
+      .btn { font-size:0.85rem; padding:.6rem .8rem; }
+      .sigs-grid { grid-template-columns:1fr; gap:.5rem; }
+    }
+
+    @media(max-width:768px) {
+      .gallery-grid { grid-template-columns:repeat(2,1fr); gap:.8rem; }
+      .events-grid { grid-template-columns:1fr !important; }
+      .students-grid { grid-template-columns:repeat(2,1fr) !important; gap:1rem !important; }
+      .timeline-wrap { padding:0 1rem; }
+      .sigs-grid { grid-template-columns:repeat(2,1fr); gap:.8rem; }
+    }
+
+    .gallery-item {
+      overflow:hidden; border-radius:1rem; cursor:pointer; position:relative;
+      aspect-ratio:1/1;
+      transition:transform .3s;
+    }
+    .gallery-item.big { aspect-ratio:auto; }
+    @media(min-width:768px) {
+      .gallery-item.big { grid-column:span 2; grid-row:span 2; }
+    }
+    @media(min-width:1024px) {
+      .events-grid { grid-template-columns:repeat(3,1fr) !important; }
+      .students-grid { grid-template-columns:repeat(4,1fr) !important; }
+      .sigs-grid { grid-template-columns:repeat(4,1fr); gap:1rem; }
+    }
+    .gallery-item img {
+      width:100%; height:100%; object-fit:cover;
+      transition:transform .6s, rotate .6s;
+    }
+    .gallery-item:hover img { transform:scale(1.15) rotate(2deg); }
+    .gallery-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to top, rgba(11,19,43,.9) 0%, rgba(11,19,43,.2) 50%, transparent 100%);
+      opacity:0; transition:opacity .4s;
+      display:flex; flex-direction:column; justify-content:flex-end; padding:1rem;
+    }
+    .gallery-item:hover .gallery-overlay { opacity:1; }
+    .gallery-overlay p { color:var(--white); font-weight:700; font-size:.9rem; }
+
+    /* Lightbox */
+    #lightbox {
+      display:none; position:fixed; inset:0; z-index:200;
+      background:rgba(11,19,43,.95); backdrop-filter:blur(20px);
+      align-items:center; justify-content:center; padding:1rem;
+    }
+    #lightbox.open { display:flex; }
+    #lightbox img { max-width:100%; max-height:90vh; border-radius:.75rem; border:1px solid rgba(255,255,255,.1); }
+    #lightbox-close {
+      position:absolute; top:1.5rem; right:1.5rem;
+      background:none; border:none; color:rgba(255,255,255,.5);
+      font-size:2.5rem; cursor:pointer; line-height:1;
+      transition:color .3s, transform .3s;
+    }
+    #lightbox-close:hover { color:var(--gold); transform:rotate(90deg); }
+
+    /* =========================================
+       EVENTS / CERITA KITA
+    ========================================= */
+    #album { background:var(--dark); }
+    .events-grid { display:grid; gap:2rem; }
+    @media(min-width:768px) { .events-grid { grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:1024px) { .events-grid { grid-template-columns:repeat(3,1fr); } }
+
+    .event-card {
+      border-radius:1.5rem; overflow:hidden;
+      background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.05);
+      display:flex; flex-direction:column;
+      transition:transform .4s, box-shadow .4s, border-color .4s;
+      position:relative;
+    }
+    .event-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background:linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity:0; transition:opacity .4s;
+    }
+    .event-card:hover { transform:translateY(-12px); box-shadow:0 20px 50px rgba(212,175,55,.12); border-color:rgba(212,175,55,.25); }
+    .event-card:hover::before { opacity:1; }
+    .event-card-img { height:220px; overflow:hidden; position:relative; }
+    .event-card-img img { width:100%; height:100%; object-fit:cover; transition:transform .6s; }
+    .event-card:hover .event-card-img img { transform:scale(1.1); }
+    .event-date {
+      position:absolute; bottom:.75rem; left:.75rem;
+      background:rgba(11,19,43,.9); backdrop-filter:blur(8px);
+      padding:.3rem 1rem; border-radius:99px; font-size:.7rem; font-weight:700;
+      letter-spacing:.15em; color:var(--gold);
+      transform:translateY(6px); opacity:0; transition:all .4s;
+    }
+    .event-card:hover .event-date { transform:translateY(0); opacity:1; }
+    .event-body { padding:1.75rem; flex:1; }
+    .event-body h3 {
+      font-size:1.3rem; font-weight:900; margin-bottom:.75rem;
+      transition:color .3s;
+    }
+    .event-card:hover .event-body h3 { color:var(--gold); }
+    .event-body p { color:var(--gray); font-size:.9rem; line-height:1.7; }
+
+    /* =========================================
+       SISWA / YEARBOOK
+    ========================================= */
+    #siswa { background:var(--light); position:relative; overflow:hidden; }
+    .bg-text {
+      position:absolute; top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      font-size:20vw; font-weight:900;
+      color:rgba(255,255,255,.02); white-space:nowrap; pointer-events:none;
+      font-family:'Playfair Display',serif;
+    }
+    .students-grid { display:grid; gap:1.5rem; }
+    @media(min-width:600px)  { .students-grid { grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:1024px) { .students-grid { grid-template-columns:repeat(4,1fr); } }
+
+    .student-card {
+      padding:2rem 1.5rem; border-radius:1.5rem; text-align:center;
+      background:rgba(20,30,55,.7); backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.05);
+      position:relative; overflow:hidden;
+      transition:transform .4s, box-shadow .4s, border-color .4s;
+    }
+    .student-card:hover {
+      transform:translateY(-10px);
+      box-shadow:0 15px 40px rgba(0,0,0,.5);
+      border-color:rgba(212,175,55,.35);
+    }
+    .student-glow {
+      position:absolute; top:0; left:50%; transform:translateX(-50%);
+      width:120px; height:120px; background:rgba(212,175,55,.18); border-radius:50%;
+      filter:blur(40px); opacity:0; transition:opacity .4s;
+      pointer-events:none;
+    }
+    .student-card:hover .student-glow { opacity:1; }
+
+    .student-avatar {
+      width:120px; height:120px; border-radius:50%;
+      border:2px solid rgba(255,255,255,.1);
+      margin:0 auto 1rem; overflow:hidden; position:relative;
+      transition:border-color .4s;
+    }
+    .student-card:hover .student-avatar { border-color:var(--gold); }
+    .student-avatar img {
+      width:100%; height:100%; object-fit:cover;
+      filter:grayscale(1); transition:filter .5s;
+    }
+    .student-card:hover .student-avatar img { filter:grayscale(0); }
+    .student-num {
+      position:absolute; bottom:-4px; right:-4px;
+      width:28px; height:28px; border-radius:50%;
+      background:var(--gold); color:var(--dark); font-size:.7rem; font-weight:700;
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; transition:opacity .3s; box-shadow:0 2px 8px rgba(0,0,0,.4);
+    }
+    .student-card:hover .student-num { opacity:1; }
+
+    .student-name { font-size:1.1rem; font-weight:900; margin-bottom:.2rem; transition:color .3s; }
+    .student-card:hover .student-name { color:var(--gold); }
+    .student-role { font-size:.65rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--gray); margin-bottom:1.25rem; }
+
+    .student-info {
+      text-align:left; padding:1rem; border-radius:1rem;
+      background:rgba(11,19,43,.5); border:1px solid rgba(255,255,255,.05);
+      font-size:.82rem; transition:border-color .3s;
+    }
+    .student-card:hover .student-info { border-color:rgba(212,175,55,.18); }
+    .info-label { font-size:.6rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); display:block; margin-bottom:.2rem; }
+    .info-text { color:var(--gray); font-style:italic; }
+    .info-divider { width:100%; height:1px; background:rgba(255,255,255,.05); margin:.75rem 0; }
+
+    /* =========================================
+       TIMELINE
+    ========================================= */
+    #timeline { background:var(--dark); }
+    .timeline-wrap { max-width:900px; margin:auto; position:relative; }
+    .timeline-line {
+      position:absolute; left:50%; transform:translateX(-50%);
+      width:2px; height:100%; top:0;
+      background:linear-gradient(to bottom, rgba(212,175,55,.5), rgba(212,175,55,.1), transparent);
+      border-radius:99px;
+    }
+    @media(max-width:767px) { .timeline-line { display:none; } }
+
+    .timeline-item {
+      display:flex; flex-direction:column; align-items:center;
+      gap:1.5rem; margin-bottom:5rem;
+    }
+    @media(min-width:768px) {
+      .timeline-item { flex-direction:row; align-items:center; gap:0; }
+      .timeline-item:nth-child(even) { flex-direction:row-reverse; }
+    }
+
+    .tl-content {
+      width:100%; padding:1.5rem;
+    }
+    @media(min-width:768px) {
+      .tl-content { width:50%; }
+      .timeline-item:nth-child(odd) .tl-content  { padding-right:4rem; text-align:right; }
+      .timeline-item:nth-child(even) .tl-content { padding-left:4rem; text-align:left; }
+    }
+    .tl-year-big {
+      font-size:5rem; font-weight:900; opacity:.12; position:absolute;
+      top:-2rem; left:0; pointer-events:none; color:var(--gold); transition:opacity .3s;
+    }
+    .timeline-item:hover .tl-year-big { opacity:.25; }
+    .tl-year { font-size:1.5rem; font-weight:700; color:var(--gold); margin-bottom:.5rem; position:relative; }
+    .tl-title { font-size:2rem; font-weight:900; margin-bottom:.75rem; }
+    .tl-desc { color:var(--gray); font-size:1rem; line-height:1.7; }
+
+    .tl-dot {
+      display:none;
+      width:48px; height:48px; border-radius:50%; border:4px solid var(--gold);
+      background:var(--dark); flex-shrink:0; align-items:center; justify-content:center;
+      box-shadow:0 0 20px rgba(212,175,55,.5); position:relative; z-index:10;
+      transition:transform .4s;
+    }
+    .timeline-item:hover .tl-dot { transform:scale(1.25); }
+    @media(min-width:768px) { .tl-dot { display:flex; } }
+    .tl-dot-inner { width:12px; height:12px; border-radius:50%; background:var(--gold); animation:spinBeat 1.5s ease-in-out infinite; }
+
+    .tl-img { width:100%; border-radius:1.5rem; overflow:hidden; border:1px solid rgba(255,255,255,.1); }
+    @media(min-width:768px) { .tl-img { width:50%; } }
+    .tl-img img { width:100%; height:280px; object-fit:cover; transition:transform .7s; }
+    .timeline-item:hover .tl-img img { transform:scale(1.08); }
+
+    /* =========================================
+       VIDEO
+    ========================================= */
+    #video { background:var(--light); }
+    .video-wrap {
+      max-width:900px; margin:auto;
+      padding:.75rem; border-radius:2rem;
+      background:rgba(20,30,55,.7); backdrop-filter:blur(16px);
+      border:1px solid rgba(212,175,55,.2);
+      box-shadow:0 20px 50px rgba(0,0,0,.5);
+      transition:border-color .4s;
+    }
+    .video-wrap:hover { border-color:rgba(212,175,55,.5); }
+    .video-ratio { position:relative; padding-top:56.25%; border-radius:1.25rem; overflow:hidden; background:#000; }
+    .video-ratio iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:0; }
+
+    /* =========================================
+       TANDA TANGAN
+    ========================================= */
+    #tanda-tangan { background:var(--dark); border-top:1px solid rgba(255,255,255,.05); }
+    .sig-layout {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:2.5rem;
+      width:100%;
+      max-width:100%;
+    }
+    @media(min-width:768px) {
+      .sig-layout {
+        grid-template-columns:1fr 1fr;
+        gap:2rem;
+      }
+    }
+    @media(min-width:1024px) {
+      .sig-layout {
+        grid-template-columns:1fr 1.5fr;
+        gap:3rem;
+        align-items:flex-start;
+      }
+    }
+
+    .sig-pad { flex:1; width:100%; }
+    .sig-board { flex:2; width:100%; }
+
+    .form-label { display:block; font-size:.65rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--gold); margin-bottom:.5rem; }
+    .form-input {
+      width:100%;
+      background:rgba(11,19,43,.5);
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:.75rem;
+      padding:.75rem 1rem;
+      color:var(--white);
+      font-size:1rem;
+      outline:none;
+      transition:all .3s;
+      box-sizing:border-box;
+    }
+    .form-input:focus {
+      border-color:var(--gold);
+      box-shadow:0 0 15px rgba(212,175,55,.2);
+      background:rgba(11,19,43,.7);
+    }
+    .form-input::placeholder { color:rgba(255,255,255,.4); }
+
+    .canvas-wrap {
+      background:rgba(11,19,43,.5);
+      border:2px dashed rgba(212,175,55,.3);
+      border-radius:.75rem;
+      overflow:visible;
+      cursor:crosshair;
+      touch-action:none;
+      position:relative;
+      margin-bottom:1rem;
+      width:100%;
+      display:block;
+      min-height:200px;
+    }
+    #sig-canvas {
+      display:block;
+      width:100%;
+      height:200px;
+      background:rgba(11,19,43,.8);
+      cursor:crosshair;
+      border:none;
+      border-radius:.5rem;
+      touch-action:none;
+    }
+    @media(max-width:768px) {
+      #sig-canvas { height:160px; }
+    }
+    @media(min-width:1024px) {
+      #sig-canvas { height:240px; }
+    }
+
+    .btn {
+      flex:1; display:flex; align-items:center; justify-content:center; gap:.5rem;
+      padding:.75rem 1rem; border-radius:.75rem; font-size:.9rem; font-weight:700;
+      cursor:pointer; transition:all .3s; border:none;
+      min-width:0;
+    }
+    .btn-ghost {
+      background:none;
+      border:1px solid rgba(255,255,255,.1);
+      color:var(--gray);
+    }
+    .btn-ghost:hover {
+      background:rgba(255,255,255,.05);
+      color:var(--white);
+      border-color:rgba(212,175,55,.3);
+    }
+    .btn-primary {
+      background:var(--gold);
+      border:none;
+      color:var(--dark);
+    }
+    .btn-primary:hover {
+      background:var(--goldlight);
+      box-shadow:0 0 20px rgba(212,175,55,.4);
+      transform:translateY(-2px);
+    }
+    .btn-primary:disabled {
+      opacity:.4;
+      cursor:not-allowed;
+    }
+    .btn svg {
+      flex-shrink:0;
+    }
+    @media(max-width:480px) {
+      .btn {
+        padding:.6rem .8rem;
+        font-size:.8rem;
+      }
+      .btn svg {
+        display:none;
+      }
+    }
+
+    .sig-saved-overlay {
+      display:none; position:absolute; inset:0;
+      background:rgba(11,19,43,.85); backdrop-filter:blur(4px);
+      flex-direction:column; align-items:center; justify-content:center;
+      color:var(--gold); font-weight:700; gap:.5rem;
+    }
+    .sig-saved-overlay.show { display:flex; }
+    .sig-saved-overlay svg { width:40px; height:40px; }
+
+    .sigs-empty {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      height:200px; color:rgba(156,163,175,.4); text-align:center;
+    }
+    .sigs-empty svg { width:60px; height:60px; margin-bottom:1rem; }
+
+    .sigs-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; }
+    @media(min-width:500px) { .sigs-grid { grid-template-columns:repeat(3,1fr); } }
+
+    /* Mobile: Single Column untuk signature section */
+    @media(max-width:768px) {
+      .sig-layout { flex-direction:column !important; gap:1.5rem !important; }
+      .sig-pad { flex:1; }
+      .sig-board { flex:1; }
+      .sigs-grid { grid-template-columns:repeat(2,1fr); gap:.8rem; }
+      #sig-canvas { height:140px; }
+    }
+
+    /* Desktop: Full layout untuk signature section */
+    @media(min-width:769px) {
+      .sig-layout { display:grid; grid-template-columns:1fr 1.5fr; align-items:flex-start; gap:3rem; }
+      .sigs-grid { grid-template-columns:repeat(4,1fr); gap:1.2rem; }
+    }
+
+    .sigs-empty {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      min-height:200px;
+      color:rgba(156,163,175,.4);
+      text-align:center;
+      padding:2rem 1rem;
+    }
+    .sigs-empty svg { width:60px; height:60px; margin-bottom:1rem; opacity:.5; }
+    .sigs-empty p { font-size:1rem; margin-bottom:.5rem; }
+    .sigs-empty small { font-size:0.85rem; opacity:.7; }
+
+    .sigs-grid {
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:1rem;
+      width:100%;
+    }
+    @media(min-width:500px) { .sigs-grid { grid-template-columns:repeat(3,1fr); gap:0.8rem; } }
+    @media(min-width:768px) { .sigs-grid { grid-template-columns:repeat(2,1fr); gap:0.8rem; } }
+    @media(min-width:1024px) { .sigs-grid { grid-template-columns:repeat(4,1fr); gap:1rem; } }
+
+    .sig-item {
+      background:rgba(11,19,43,.4); border-radius:1rem; padding:1rem;
+      border:1px solid rgba(255,255,255,.05); text-align:center;
+      transition:all .3s; position:relative; overflow:hidden;
+      display:flex; flex-direction:column; gap:.5rem;
+    }
+    .sig-item:hover { border-color:rgba(212,175,55,.3); transform:translateY(-4px); box-shadow:0 8px 20px rgba(212,175,55,.1); }
+    .sig-item-img { width:100%; height:80px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.04); border-radius:.5rem; padding:.5rem; overflow:hidden; }
+    .sig-item-img img { max-height:100%; max-width:100%; object-fit:contain; filter:drop-shadow(0 0 3px rgba(212,175,55,.7)); transition:transform .3s; }
+    .sig-item:hover .sig-item-img img { transform:scale(1.1); }
+    .sig-item-name { font-family:'Dancing Script',cursive; font-size:1.2rem; font-weight:600; word-break:break-word; }
+    .sig-item-date { font-size:.6rem; color:rgba(212,175,55,.4); letter-spacing:.1em; text-transform:uppercase; }
+
+    /* =========================================
+       MUSIC PLAYER
+    ========================================= */
+    #music-player {
+      position:fixed; bottom:1.5rem; right:1.5rem; z-index:100;
+      display:flex; align-items:center; gap:.75rem;
+    }
+    .music-indicator {
+      display:none; align-items:center; gap:.2rem;
+      background:rgba(11,19,43,.85); backdrop-filter:blur(10px);
+      padding:.4rem 1rem; border-radius:99px;
+      border:1px solid rgba(212,175,55,.3);
+    }
+    .music-indicator.playing { display:flex; }
+    .music-bar {
+      width:3px; border-radius:99px; background:var(--gold);
+    }
+    .music-bar:nth-child(1) { height:12px; animation:float .8s ease-in-out infinite; }
+    .music-bar:nth-child(2) { height:20px; animation:float 1s ease-in-out .2s infinite; }
+    .music-bar:nth-child(3) { height:8px;  animation:float .7s ease-in-out .1s infinite; }
+    .music-bar:nth-child(4) { height:16px; animation:float .9s ease-in-out .3s infinite; }
+    .music-label { font-size:.6rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--gold); margin-left:.4rem; }
+
+    #play-btn {
+      width:56px; height:56px; border-radius:50%; border:none; cursor:pointer;
+      background:var(--gold); color:var(--dark);
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 0 20px rgba(212,175,55,.5);
+      transition:transform .3s, background .3s;
+    }
+    #play-btn:hover { transform:scale(1.1); background:var(--white); }
+    #play-btn svg { width:22px; height:22px; fill:currentColor; }
+
+    /* =========================================
+       FOOTER
+    ========================================= */
+    footer {
+      background:var(--dark); padding:5rem 0 2rem;
+      border-top:1px solid rgba(255,255,255,.05); text-align:center; position:relative; overflow:hidden;
+    }
+    footer::before {
+      content:''; position:absolute; bottom:0; left:0; right:0; height:50%;
+      background:linear-gradient(to top, rgba(212,175,55,.05), transparent);
+      pointer-events:none;
+    }
+    .footer-logo {
+      font-size:clamp(3rem,10vw,6rem); font-weight:900;
+      background:linear-gradient(to bottom, #fff, #4b5563);
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      opacity:.18; margin-bottom:1.5rem;
+    }
+    .footer-divider { display:flex; align-items:center; justify-content:center; gap:.75rem; margin-bottom:1rem; }
+    .footer-line { width:3rem; height:1px; background:rgba(212,175,55,.4); }
+    .footer-heart { color:var(--gold); font-size:1rem; animation:spinBeat 1.5s ease-in-out infinite; }
+    .footer-text { font-weight:700; letter-spacing:.15em; text-transform:uppercase; font-size:.8rem; color:var(--gray); margin-bottom:.4rem; }
+    .footer-copy { font-size:.7rem; color:rgba(156,163,175,.4); }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     CUSTOM CURSOR
+============================================================ -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- ============================================================
+     MUSIC PLAYER
+============================================================ -->
+<div id="music-player">
+  <div class="music-indicator" id="music-indicator">
+    <span class="music-bar"></span>
+    <span class="music-bar"></span>
+    <span class="music-bar"></span>
+    <span class="music-bar"></span>
+    <span class="music-label">Playing</span>
+  </div>
+  <!-- ⬇ Ganti src dengan file musik kamu (taruh di folder sama) -->
+  <audio id="bg-audio" loop>
+    <source src="musik.mp3" type="audio/mpeg" />
+  </audio>
+  <button id="play-btn" aria-label="Play/Pause Music">
+    <svg id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    <svg id="pause-icon" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+  </button>
+</div>
+
+<!-- ============================================================
+     LIGHTBOX
+============================================================ -->
+<div id="lightbox">
+  <button id="lightbox-close">&#10005;</button>
+  <img id="lightbox-img" src="" alt="Foto besar" />
+</div>
+
+<!-- ============================================================
+     NAVBAR
+============================================================ -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">VIII.</a>
+    <ul class="nav-links">
+      <li><a href="#cerita">Cerita</a></li>
+      <li><a href="#galeri">Galeri</a></li>
+      <li><a href="#siswa">Siswa</a></li>
+      <li><a href="#timeline">Jejak</a></li>
+      <li><a href="#tanda-tangan">Tanda Tangan</a></li>
+    </ul>
+  </div>
+  <div id="progress-bar"></div>
+</nav>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section id="hero">
+  <div id="hero-bg">
+    <!-- ⬇ Ganti dengan foto background hero (taruh di folder sama) -->
+    <img src="foto/hero-bg.jpg" alt="Background" onerror="this.src='https://picsum.photos/seed/classbg/1920/1080'" />
+    <div class="overlay"></div>
+    <div class="orb1"></div>
+    <div class="orb2"></div>
+  </div>
+
+  <div id="hero-content" class="fade">
+    <!-- ⬇ Ganti teks di bawah -->
+    <div class="hero-badge">Angkatan 2024</div>
+    <h1 class="serif">
+      <span class="hero-title-outline">KENANGAN</span>
+      <span class="hero-title-main anim-glow">Angkatan Pertama</span>
+    </h1>
+    <p class="hero-subtitle">Menyimpan cerita, tawa, dan perjalanan bersama. Sebuah arsip digital interaktif.</p>
+    <a href="#cerita" class="hero-btn">
+      Mulai Membaca
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-4M17 3l4 4-4 4m4-4H9"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- ============================================================
+     MARQUEE
+============================================================ -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>KENANGAN KELAS VIII • KENANGAN KELAS VIII • KENANGAN KELAS VIII • KENANGAN KELAS VIII • KENANGAN KELAS VIII • </span>
+
+    <span>SMP SAINS LIS • SMP SAINS LIS • SMP SAINS LIS • SMP SAINS LIS • </span>
+  </div>
+</div>
+
+<!-- ============================================================
+     CERITA / PROLOGUE
+============================================================ -->
+<section id="cerita" class="section">
+  <div class="container">
+    <div class="prologue-inner fade">
+      <div class="quote-icon">"</div>
+      <!-- ⬇ Edit teks cerita di sini -->
+      <h2 class="prologue-lead serif">
+        Tiga tahun lalu, kita melangkah masuk dengan <span class="gold italic">ragu</span>...
+      </h2>
+      <p class="prologue-text">
+        Kita adalah sekumpulan orang asing yang dipertemukan oleh takdir di ruang kelas yang sama. Dari canggung menjadi akrab, dari diam menjadi tawa yang paling keras di lorong sekolah.
+      </p>
+      <p class="prologue-text">
+        Halaman ini bukan sekadar kumpulan foto, melainkan <strong style="color:#fff;font-family:'Playfair Display',serif">mesin waktu</strong>. Tempat kita bisa kembali pulang saat rindu menyapa. Mari kita buka kembali lembaran cerita Kelas VIII.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STATS
+============================================================ -->
+<section id="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <!-- ⬇ Edit angka di data-value -->
+      <div class="stat-card fade">
+        <div class="stat-icon">👥</div>
+        <div class="stat-value" data-value="10">0</div>
+        <div class="stat-label">Siswa</div>
+      </div>
+      <div class="stat-card fade">
+        <div class="stat-icon">📅</div>
+        <div class="stat-value" data-value="10">0</div>
+        <div class="stat-label">Kegiatan</div>
+      </div>
+      <div class="stat-card fade">
+        <div class="stat-icon">📷</div>
+        <div class="stat-value" data-value="30">0</div>
+        <div class="stat-label">Foto</div>
+      </div>
+      <div class="stat-card fade">
+        <div class="stat-icon">❤️</div>
+        <div class="stat-value" data-value="1095">0</div>
+        <div class="stat-label">Hari Bersama</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     QUOTES SLIDER
+============================================================ -->
+<section id="quotes-section">
+  <div class="container">
+    <div class="quote-display">
+      <p id="quote-text" class="quote-text"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     GALERI FOTO
+============================================================ -->
+<section id="galeri" class="section">
+  <div class="container">
+    <div class="gallery-header fade">
+      <div>
+        <h2 class="section-title serif">Momen <span class="gold italic">Terbaik</span></h2>
+        <p class="section-sub" style="text-align:left">Kumpulan memori visual yang membekukan waktu, tawa, dan kebersamaan kita.</p>
+      </div>
+      <span style="color:var(--gold);font-weight:700;letter-spacing:.1em;font-size:.8rem;text-transform:uppercase;border-bottom:2px solid var(--gold);padding-bottom:.2rem">Eksplorasi Galeri</span>
+    </div>
+
+    <!-- ⬇ Foto diambil dari folder "foto/" di lokasi yang sama dengan HTML ini
+         Format: galeri1.jpg, galeri2.jpg, ... galeri12.jpg
+         Jika tidak ada → otomatis pakai foto placeholder -->
+    <div class="gallery-grid" id="gallery-grid">
+      <!-- Diisi oleh JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     QUOTES (hidden, dipakai JS)
+============================================================ -->
+<script>
+// ============================================================
+// DATA — EDIT SEMUA BAGIAN DI BAWAH INI
+// ============================================================
+
+const QUOTES = [
+  "Masa SMP adalah masa di mana kita belajar arti persahabatan yang sesungguhnya.",
+  "Bukan tentang seberapa lama kita bersama, tapi seberapa dalam kenangan yang kita ciptakan.",
+  "Kelas VIII: Tempat di mana tawa paling keras dan cerita paling konyol tercipta.",
+  "Kita mungkin akan berpisah jalan, tapi kenangan di kelas ini akan selalu jadi rumah.",
+  "Terima kasih untuk setiap contekan PR, candaan di jam kosong, dan dukungan saat ujian.",
+  "Jangan pernah lupakan masa-masa di mana masalah terbesar kita hanyalah PR Matematika.",
+  "Setiap sudut sekolah ini punya cerita tentang kita.",
+  "Kita masuk sebagai orang asing, dan keluar sebagai keluarga.",
+  "Kenangan indah tidak akan pernah pudar, ia hanya tersimpan rapi di sudut hati.",
+  "Sampai jumpa di puncak kesuksesan, teman-teman!"
+];
+
+// Foto galeri — taruh file di folder "foto/" (galeri1.jpg, galeri2.jpg, dst)
+const GALLERY = Array.from({length:12}, (_,i) => ({
+  src:     `foto/galeri${i+1}.jpg`,
+  fallback:`https://picsum.photos/seed/gallery${i+1}/800/800`,
+  caption: `Kenangan ${i+1}`
+}));
+
+// Kegiatan / events
+const EVENTS = [
+  { title:"Study Tour Bali",    date:"15 Mei 2022",      desc:"Perjalanan tak terlupakan mengunjungi pantai dan budaya Bali bersama teman sekelas.",   src:"foto/event1.jpg", fallback:"https://picsum.photos/seed/event1/600/400" },
+  { title:"Class Meeting",      date:"10 Des 2022",       desc:"Juara 1 lomba tarik tambang antar kelas! Kekompakan Kelas VIII memang tiada duanya.",    src:"foto/event2.jpg", fallback:"https://picsum.photos/seed/event2/600/400" },
+  { title:"Hari Guru Nasional", date:"25 Nov 2022",       desc:"Memberikan kejutan kecil untuk wali kelas tercinta. Penuh haru dan tawa.",              src:"foto/event3.jpg", fallback:"https://picsum.photos/seed/event3/600/400" },
+  { title:"Lomba 17 Agustus",   date:"17 Ags 2022",       desc:"Keseruan lomba balap karung dan makan kerupuk di lapangan sekolah.",                    src:"foto/event4.jpg", fallback:"https://picsum.photos/seed/event4/600/400" },
+  { title:"Pentas Seni",        date:"20 Feb 2023",       desc:"Penampilan drama musikal dari Kelas VIII yang memukau seluruh sekolah.",                 src:"foto/event5.jpg", fallback:"https://picsum.photos/seed/event5/600/400" },
+  { title:"Buka Puasa Bersama", date:"10 Apr 2023",       desc:"Momen kebersamaan di bulan Ramadhan, berbagi cerita sambil menunggu waktu berbuka.",    src:"foto/event6.jpg", fallback:"https://picsum.photos/seed/event6/600/400" },
+  { title:"Kerja Bakti Kelas",  date:"5 Mar 2022",        desc:"Membersihkan dan menghias kelas bersama agar lebih nyaman untuk belajar.",               src:"foto/event7.jpg", fallback:"https://picsum.photos/seed/event7/600/400" },
+  { title:"Kunjungan Museum",   date:"12 Okt 2021",       desc:"Belajar sejarah langsung dari sumbernya. Seru dan menambah wawasan.",                   src:"foto/event8.jpg", fallback:"https://picsum.photos/seed/event8/600/400" },
+  { title:"Ujian Praktek",      date:"15 Mar 2023",       desc:"Tegang tapi seru saat ujian praktek kesenian dan olahraga.",                            src:"foto/event9.jpg", fallback:"https://picsum.photos/seed/event9/600/400" },
+  { title:"Malam Perpisahan",   date:"20 Jun 2023",       desc:"Malam puncak penuh air mata dan pelukan hangat sebelum melangkah ke jenjang berikutnya.", src:"foto/event10.jpg", fallback:"https://picsum.photos/seed/event10/600/400" },
+];
+
+// Timeline
+const TIMELINE = [
+  {
+    year:"2024/2025", title:"Awal Perjumpaan",
+    desc:"Hari pertama masuk sekolah, masih malu-malu dan canggung. Masa orientasi yang penuh kejutan.",
+    src:"foto/timeline1.jpg", fallback:"https://picsum.photos/seed/time1/400/300"
+  },
+  {
+    year:"2025/2026", title:"Masa Paling Seru",
+    desc:"Mulai akrab satu sama lain. Banyak kegiatan seru seperti class meeting dan study tour pertama.",
+    src:"foto/timeline2.jpg", fallback:"https://picsum.photos/seed/time2/400/300"
+  },
+  {
+    year:"2026/2027", title:"Persiapan Kelulusan",
+    desc:"Fokus ujian, tapi tetap menyempatkan waktu untuk membuat kenangan terakhir sebelum berpisah.",
+    src:"foto/timeline3.jpg", fallback:"https://picsum.photos/seed/time3/400/300"
+  }
+];
+
+// Data siswa
+// ⬇ EDIT: ganti nama, cita-cita, pesan, kesan, dan nama file foto
+// 1 Arya Suganda 
+// 2 Audy zambalogina 
+// 3 Elsa adeylia putri 
+// 4 Faiha Afriza 
+// 5 putri Laila Yumna 
+// 6 ikrom Lutfi 
+// 7 .m lisky anugrah 
+// 8 .Nurul mujahidah Fillah 
+// 9. samaituqi arina Sofia 
+// 10 M. Nabil Ar Rasyid
+const STUDENTS = [
+  { id:1,  name:"Arya Suganda",             cita:"Programmer",           pesan:"Jangan lupa ngerjain PR ya guys!",                 kesan:"Kelas paling berisik tapi paling ngangenin.",               src:"foto/siswa1.jpg",  fallback:"https://picsum.photos/seed/std1/200/200"  },
+  { id:2,  name:"Audy Zambwalogina",        cita:"Dokter Anak",          pesan:"Semoga kita semua sukses di masa depan.",          kesan:"Senang bisa kenal kalian semua, sahabat terbaik.",          src:"foto/siswa2.jpg",  fallback:"https://picsum.photos/seed/std2/200/200"  },
+  { id:3,  name:"Elsa adeylia putri",       cita:"Pengusaha",            pesan:"Kalo sukses jangan sombong-sombong.",              kesan:"Banyak banget kejadian konyol di kelas ini.",               src:"foto/siswa3.jpg",  fallback:"https://picsum.photos/seed/std3/200/200"  },
+  { id:4,  name:"Faiha Afriza",             cita:"Penulis",              pesan:"Teruslah bermimpi dan berkarya.",                  kesan:"Wali kelas kita yang paling sabar ngadepin kita.",          src:"foto/siswa4.jpg",  fallback:"https://picsum.photos/seed/std4/200/200"  },
+  { id:5,  name:"Putri Laila Yumna",        cita:"Atlet Basket",         pesan:"Jangan lupa olahraga biar sehat.",                 kesan:"Main basket bareng pas jam istirahat paling seru.",         src:"foto/siswa5.jpg",  fallback:"https://picsum.photos/seed/std5/200/200"  },
+  { id:6,  name:"Ikrom Lutfi",              cita:"Desainer Grafis",      pesan:"Warnai hidupmu dengan hal positif.",               kesan:"Suka banget pas kita hias kelas bareng-bareng.",            src:"foto/siswa6.jpg",  fallback:"https://picsum.photos/seed/std6/200/200"  },
+  { id:7,  name:"M. Lisky Anugrah",         cita:"Polisi",               pesan:"Tetap disiplin dan semangat belajar.",             kesan:"Sering dihukum bareng karena telat, haha.",                 src:"foto/siswa7.jpg",  fallback:"https://picsum.photos/seed/std7/200/200"  },
+  { id:8,  name:"Nurul Mujahidah Fillah",   cita:"Penyanyi",             pesan:"Kejar mimpimu setinggi langit.",                   kesan:"Pentas seni kelas kita yang paling pecah!",                 src:"foto/siswa8.jpg",  fallback:"https://picsum.photos/seed/std8/200/200"  },
+  { id:9,  name:"Samaituqi Arina Sofia",    cita:"Arsitek",              pesan:"Bangun masa depanmu dari sekarang.",               kesan:"Suka gambar-gambar di buku tulis pas jam pelajaran.",       src:"foto/siswa9.jpg",  fallback:"https://picsum.photos/seed/std9/200/200"  },
+  { id:10, name:"M. Nabil Ar Rasyid",       cita:"Guru",                 pesan:"Ilmu itu penting, jangan malas belajar.",          kesan:"Sering ngajarin temen-temen pas mau ujian.",                src:"foto/siswa10.jpg", fallback:"https://picsum.photos/seed/std10/200/200" },
+];
+
+// Link video YouTube (ganti dengan link perpisahan kalian)
+const VIDEO_EMBED = "https://www.youtube.com/embed/dQw4w9WgXcQ?controls=1&rel=0";
+// ============================================================
+// END DATA
+// ============================================================
+</script>
+
+<!-- ============================================================
+     EVENTS / CERITA KITA
+============================================================ -->
+<section id="album" class="section">
+  <div class="container">
+    <div class="section-head fade">
+      <h2 class="section-title serif">Cerita <span class="gold">Kita</span></h2>
+      <p class="section-sub">Setiap acara memiliki kisahnya sendiri. Ini adalah bab-bab dalam buku perjalanan kita.</p>
+    </div>
+    <div class="events-grid" id="events-grid"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     YEARBOOK / SISWA
+============================================================ -->
+<section id="siswa" class="section">
+  <div class="bg-text">CLASS OF '23</div>
+  <div class="container" style="position:relative;z-index:10">
+    <div class="section-head fade">
+      <h2 class="section-title serif">Keluarga <span class="gold">Besar</span></h2>
+      <p class="section-sub">Wajah-wajah yang mewarnai hari-hari di Kelas VIII.</p>
+    </div>
+    <div class="students-grid" id="students-grid"></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TIMELINE
+============================================================ -->
+<section id="timeline" class="section">
+  <div class="container">
+    <div class="section-head fade">
+      <h2 class="section-title serif">Jejak <span class="gold">Langkah</span></h2>
+      <p class="section-sub">Garis waktu perjalanan kita dari awal hingga akhir.</p>
+    </div>
+    <div class="timeline-wrap">
+      <div class="timeline-line"></div>
+      <div id="timeline-list"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     VIDEO
+============================================================ -->
+<section id="video" class="section">
+  <div class="container">
+    <div class="section-head fade">
+      <h2 class="section-title serif">Putar <span class="gold">Kembali</span></h2>
+      <p class="section-sub">Saksikan kembali momen-momen bergerak yang penuh tawa.</p>
+    </div>
+    <div class="video-wrap fade">
+      <div class="video-ratio">
+        <iframe id="video-frame" src="" title="Video Kenangan" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TANDA TANGAN
+============================================================ -->
+<section id="tanda-tangan" class="section">
+  <div class="container">
+    <div class="section-head fade">
+      <h2 class="section-title serif">Buku <span class="gold">Tanda Tangan</span></h2>
+      <p class="section-sub">Tinggalkan jejakmu di buku tahunan digital ini.</p>
+    </div>
+
+    <div class="sig-layout">
+      <!-- Pad -->
+      <div class="sig-pad fade">
+        <div class="glass-strong" style="padding:2rem;border-radius:1.5rem">
+          <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
+            <svg width="22" height="22" fill="none" stroke="var(--gold)" stroke-width="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536M9 13l-4 1 1-4 9.768-9.768a2 2 0 012.828 0l.707.707a2 2 0 010 2.828L9 13z"/></svg>
+            <h3 class="serif" style="font-size:1.4rem;font-weight:900">Goreskan Tinta</h3>
+          </div>
+
+          <div style="margin-bottom:1rem">
+            <label class="form-label">Nama Kamu</label>
+            <input id="sig-name" class="form-input" type="text" placeholder="Tulis namamu di sini..." />
+          </div>
+
+          <div style="margin-bottom:1rem">
+            <label class="form-label">Tanda Tangan</label>
+            <div class="canvas-wrap">
+              <canvas id="sig-canvas"></canvas>
+              <div class="sig-saved-overlay" id="sig-saved-overlay">
+                <svg fill="none" stroke="var(--gold)" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span style="font-weight:700;color:var(--gold)">Tersimpan!</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:.75rem">
+            <button class="btn btn-ghost" id="sig-clear">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20H21M4.52 6.04L3 10l4.46 1.5M9 3l-1.5 4.5M16.48 6.04L18 10l-4.46 1.5M15 3l1.5 4.5M7 20l3-8 3 8"/></svg>
+              Hapus
+            </button>
+            <button class="btn btn-primary" id="sig-save">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+              Simpan
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Display -->
+      <div class="sig-board fade">
+        <div class="glass" style="padding:2rem;border-radius:1.5rem;min-height:300px">
+          <h3 class="serif" style="font-size:1.4rem;font-weight:900;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.1)">Jejak Teman-Teman</h3>
+          <div id="sigs-empty" class="sigs-empty">
+            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536M9 13l-4 1 1-4 9.768-9.768a2 2 0 012.828 0l.707.707a2 2 0 010 2.828L9 13z"/></svg>
+            <p>Belum ada tanda tangan.</p>
+            <small>Jadilah yang pertama!</small>
+          </div>
+          <div class="sigs-grid" id="sigs-grid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer>
+  <div class="container" style="position:relative;z-index:10">
+    <div class="footer-logo serif">Angkatan Pertama</div>
+    <div class="footer-divider">
+      <span class="footer-line"></span>
+      <span class="footer-heart">♥</span>
+      <span class="footer-line"></span>
+    </div>
+    <p class="footer-text">Dibuat dengan kenangan oleh Angkatan 2024</p>
+    <p class="footer-copy">© <span id="year"></span> Hak Cipta Dilindungi.</p>
+  </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+// ─── Helper: image with fallback ─────────────────────────────
+function imgSrc(el, src, fallback) {
+  el.src = src;
+  el.onerror = () => { el.src = fallback; el.onerror = null; };
+}
+
+// ─── Render Gallery ──────────────────────────────────────────
+(function renderGallery() {
+  const grid = document.getElementById('gallery-grid');
+  GALLERY.forEach((g, i) => {
+    const div = document.createElement('div');
+    div.className = 'gallery-item fade' + (i === 0 || i === 7 ? ' big' : '');
+    const img = document.createElement('img');
+    imgSrc(img, g.src, g.fallback);
+    img.alt = g.caption; img.loading = 'lazy';
+
+    const ov = document.createElement('div');
+    ov.className = 'gallery-overlay';
+    ov.innerHTML = `<p>📷 ${g.caption}</p>`;
+
+    div.appendChild(img); div.appendChild(ov);
+    div.addEventListener('click', () => openLightbox(g.src, g.fallback));
+    grid.appendChild(div);
+  });
+})();
+
+// ─── Render Events ───────────────────────────────────────────
+(function renderEvents() {
+  const grid = document.getElementById('events-grid');
+  EVENTS.forEach(e => {
+    const card = document.createElement('div');
+    card.className = 'event-card fade';
+    card.innerHTML = `
+      <div class="event-card-img">
+        <img src="${e.src}" alt="${e.title}" loading="lazy" onerror="this.src='${e.fallback}'" />
+        <span class="event-date">${e.date}</span>
+      </div>
+      <div class="event-body">
+        <h3 class="serif">${e.title}</h3>
+        <p>${e.desc}</p>
+      </div>`;
+    grid.appendChild(card);
+  });
+})();
+
+// ─── Render Students ─────────────────────────────────────────
+(function renderStudents() {
+  const grid = document.getElementById('students-grid');
+  STUDENTS.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'student-card fade';
+    card.innerHTML = `
+      <div class="student-glow"></div>
+      <div class="student-avatar">
+        <img src="${s.src}" alt="${s.name}" loading="lazy" onerror="this.src='${s.fallback}'" />
+        <span class="student-num">${s.id}</span>
+      </div>
+      <h3 class="student-name serif">${s.name}</h3>
+      <p class="student-role">${s.cita}</p>
+      <div class="student-info">
+        <span class="info-label">Pesan</span>
+        <p class="info-text">"${s.pesan}"</p>
+        <div class="info-divider"></div>
+        <span class="info-label">Kesan</span>
+        <p class="info-text">"${s.kesan}"</p>
+      </div>`;
+    grid.appendChild(card);
+  });
+})();
+
+// ─── Render Timeline ─────────────────────────────────────────
+(function renderTimeline() {
+  const list = document.getElementById('timeline-list');
+  TIMELINE.forEach(t => {
+    const item = document.createElement('div');
+    item.className = 'timeline-item';
+    item.innerHTML = `
+      <div class="tl-content fade" style="position:relative">
+        <span class="tl-year-big">${t.year}</span>
+        <span class="tl-year serif">${t.year}</span>
+        <h3 class="tl-title serif">${t.title}</h3>
+        <p class="tl-desc">${t.desc}</p>
+      </div>
+      <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+      <div class="tl-img fade">
+        <img src="${t.src}" alt="${t.title}" loading="lazy" onerror="this.src='${t.fallback}'" />
+      </div>`;
+    list.appendChild(item);
+  });
+})();
+
+// ─── Video ───────────────────────────────────────────────────
+document.getElementById('video-frame').src = VIDEO_EMBED;
+
+// ─── Footer year ─────────────────────────────────────────────
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// ─── Quotes Slider ───────────────────────────────────────────
+(function initQuotes() {
+  const el = document.getElementById('quote-text');
+  let idx = 0;
+  function show() {
+    el.style.animation = 'none';
+    el.offsetHeight; // reflow
+    el.style.animation = 'fadeIn .8s ease';
+    el.textContent = '"' + QUOTES[idx] + '"';
+    idx = (idx + 1) % QUOTES.length;
+  }
+  show();
+  setInterval(show, 6000);
+})();
+
+// ─── Scroll Fade-in (IntersectionObserver) ───────────────────
+(function initFadeIn() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.08, rootMargin: '60px' });
+  document.querySelectorAll('.fade').forEach(el => obs.observe(el));
+})();
+
+// ─── Stats Counter ───────────────────────────────────────────
+(function initCounters() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = +el.dataset.value;
+      const step = Math.ceil(target / 60);
+      let cur = 0;
+      const t = setInterval(() => {
+        cur = Math.min(cur + step, target);
+        el.textContent = cur.toLocaleString('id-ID');
+        if (cur >= target) clearInterval(t);
+      }, 25);
+      obs.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stat-value').forEach(el => obs.observe(el));
+})();
+
+// ─── Navbar scroll ───────────────────────────────────────────
+(function initNavbar() {
+  const nav = document.getElementById('navbar');
+  const bar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+    const total = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    bar.style.width = (window.scrollY / total * 100) + '%';
+  }, { passive: true });
+})();
+
+// ─── Custom Cursor ───────────────────────────────────────────
+(function initCursor() {
+  const dot  = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  let rx = 0, ry = 0;
+  window.addEventListener('mousemove', e => {
+    dot.style.left  = e.clientX + 'px';
+    dot.style.top   = e.clientY + 'px';
+    rx += (e.clientX - rx) * .15;
+    ry += (e.clientY - ry) * .15;
+  }, { passive: true });
+  (function frame() {
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(frame);
+  })();
+  document.addEventListener('mouseover', e => {
+    const t = e.target.closest('a,button,[class*="cursor-pointer"]');
+    dot.style.transform  = `translate(-50%,-50%) scale(${t ? .5 : 1})`;
+    ring.style.transform = `translate(-50%,-50%) scale(${t ? 1.6 : 1})`;
+    ring.style.background = t ? 'rgba(212,175,55,.12)' : 'transparent';
+  });
+})();
+
+// ─── Lightbox ────────────────────────────────────────────────
+function openLightbox(src, fallback) {
+  const lb  = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img');
+  imgSrc(img, src, fallback);
+  lb.classList.add('open');
+}
+document.getElementById('lightbox').addEventListener('click', e => {
+  if (e.target === e.currentTarget) e.currentTarget.classList.remove('open');
+});
+document.getElementById('lightbox-close').addEventListener('click', () => {
+  document.getElementById('lightbox').classList.remove('open');
+});
+
+// ─── Music Player ────────────────────────────────────────────
+(function initMusic() {
+  const audio  = document.getElementById('bg-audio');
+  const btn    = document.getElementById('play-btn');
+  const indic  = document.getElementById('music-indicator');
+  const playI  = document.getElementById('play-icon');
+  const pauseI = document.getElementById('pause-icon');
+
+  // Auto-play saat halaman dibuka
+  function setPlaying(play) {
+    if (play) {
+      audio.play().catch(() => {});
+      indic.classList.add('playing');
+      playI.style.display  = 'none';
+      pauseI.style.display = '';
+    } else {
+      audio.pause();
+      indic.classList.remove('playing');
+      playI.style.display  = '';
+      pauseI.style.display = 'none';
+    }
+  }
+
+  // Coba autoplay langsung
+  setPlaying(true);
+
+  // Fallback: autoplay setelah user pertama kali sentuh/klik halaman
+  document.addEventListener('click',     () => { if (audio.paused) setPlaying(true); }, { once: true });
+  document.addEventListener('touchstart',() => { if (audio.paused) setPlaying(true); }, { once: true });
+
+  btn.addEventListener('click', e => {
+    e.stopPropagation(); // jangan trigger listener di atas
+    setPlaying(audio.paused);
+  });
+
+})();
+
+// ====================================================
+// DEVICE DETECTION & RESPONSIVE INITIALIZATION
+// ====================================================
+(function initDeviceDetection() {
+  // Check if device mode is set from index.html
+  const storedMode = localStorage.getItem('kenangan_device_mode');
+  const isMobileDevice = window.innerWidth <= 768;
+  const mode = storedMode || (isMobileDevice ? 'mobile' : 'desktop');
+  
+  document.documentElement.setAttribute('data-device', mode);
+  console.log('🎯 Device Mode:', mode);
+  
+  // Update on resize
+  window.addEventListener('resize', () => {
+    const isMobile = window.innerWidth <= 768;
+    const newMode = storedMode || (isMobile ? 'mobile' : 'desktop');
+    document.documentElement.setAttribute('data-device', newMode);
+  });
+
+  // Optional: Add button to go back to device selector
+  const navbar = document.getElementById('navbar');
+  if (navbar) {
+    const backBtn = document.createElement('a');
+    backBtn.href = 'index.html';
+    backBtn.style.cssText = 'position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);padding:0.5rem 1rem;background:rgba(212,175,55,.1);border-radius:6px;color:var(--gold);font-size:0.8rem;text-decoration:none;transition:all 0.3s;border:1px solid rgba(212,175,55,.2)';
+    backBtn.textContent = '← Ubah Device';
+    backBtn.onmouseover = () => backBtn.style.background = 'var(--gold)' && (backBtn.style.color = 'var(--dark)');
+    backBtn.onmouseout = () => backBtn.style.background = 'rgba(212,175,55,.1)' && (backBtn.style.color = 'var(--gold)');
+    navbar.style.position = 'relative';
+    navbar.appendChild(backBtn);
+  }
+})();
+
+// ─── Signature Storage Manager ────────────────────────────────
+const STORAGE_KEY = 'kenangan_signatures_v1';
+
+class SignatureStorageManager {
+  constructor() {
+    this.signatures = this.loadSignatures();
+  }
+
+  loadSignatures() {
+    try {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    } catch (error) {
+      console.error('Error loading signatures:', error);
+      return [];
+    }
+  }
+
+  saveSignatures() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.signatures));
+      // Trigger custom event untuk sinkronisasi antar tab
+      window.dispatchEvent(new CustomEvent('signatures_updated', { 
+        detail: { signatures: this.signatures } 
+      }));
+    } catch (error) {
+      console.error('Error saving signatures:', error);
+    }
+  }
+
+  addSignature(name, imageData) {
+    const date = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+    this.signatures.unshift({ id: Date.now(), name, imageData, date });
+    this.saveSignatures();
+  }
+
+  deleteSignature(id) {
+    this.signatures = this.signatures.filter(sig => sig.id !== id);
+    this.saveSignatures();
+  }
+
+  getAll() {
+    return this.signatures;
+  }
+}
+
+const signatureManager = new SignatureStorageManager();
+
+// ─── Signature Board ─────────────────────────────────────────
+(function initSignature() {
+  // Delay initialization untuk memastikan canvas ada di DOM
+  setTimeout(() => {
+    const canvas  = document.getElementById('sig-canvas');
+    if (!canvas) {
+      console.warn('Canvas not found, retrying...');
+      setTimeout(initSignature, 500);
+      return;
+    }
+
+    const ctx     = canvas.getContext('2d');
+    const nameInp = document.getElementById('sig-name');
+    const saveBtn = document.getElementById('sig-save');
+    const clearBtn= document.getElementById('sig-clear');
+    const overlay = document.getElementById('sig-saved-overlay');
+    const sigsGrid= document.getElementById('sigs-grid');
+    const empty   = document.getElementById('sigs-empty');
+    let drawing   = false;
+
+    // Hi-DPI setup
+    function setupCanvas() {
+      try {
+        const wrap  = canvas.parentElement;
+        const rect  = wrap.getBoundingClientRect();
+        const dpr   = window.devicePixelRatio || 1;
+        const h     = parseInt(getComputedStyle(canvas).height) || 200;
+
+        canvas.width  = rect.width * dpr;
+        canvas.height = h * dpr;
+        ctx.scale(dpr, dpr);
+        ctx.lineCap   = 'round';
+        ctx.lineJoin  = 'round';
+        ctx.strokeStyle = '#D4AF37';
+        ctx.lineWidth   = 2.5;
+        ctx.lineDashOffset = 0;
+      } catch (e) {
+        console.error('Canvas setup error:', e);
+      }
+    }
+
+    setupCanvas();
+
+    function coords(e) {
+      const rect = canvas.getBoundingClientRect();
+      const src = e.touches ? e.touches[0] : e;
+      return {
+        x: (src.clientX - rect.left) * (canvas.width / rect.width),
+        y: (src.clientY - rect.top) * (canvas.height / rect.height)
+      };
+    }
+
+    // Mouse events
+    canvas.addEventListener('mousedown', (e) => {
+      drawing = true;
+      ctx.beginPath();
+      const {x, y} = coords(e);
+      ctx.moveTo(x, y);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (!drawing) return;
+      const {x, y} = coords(e);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    });
+
+    canvas.addEventListener('mouseup', () => {
+      drawing = false;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+      drawing = false;
+    });
+
+    // Touch events
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      drawing = true;
+      ctx.beginPath();
+      const {x, y} = coords(e);
+      ctx.moveTo(x, y);
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!drawing) return;
+      const {x, y} = coords(e);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      drawing = false;
+    }, { passive: false });
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      overlay.classList.remove('show');
+    }
+
+    clearBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      clearCanvas();
+    });
+
+    // Render signatures dari storage
+    function renderSignatures() {
+      const sigs = signatureManager.getAll();
+      sigsGrid.innerHTML = '';
+
+      if (sigs.length === 0) {
+        empty.style.display = 'flex';
+        return;
+      }
+
+      empty.style.display = 'none';
+
+      sigs.forEach(sig => {
+        const item = document.createElement('div');
+        item.className = 'sig-item';
+        item.innerHTML = `
+          <div class="sig-item-img"><img src="${sig.imageData}" alt="${sig.name}" loading="lazy" /></div>
+          <div class="sig-item-name handwriting">${sig.name}</div>
+          <div class="sig-item-date">${sig.date}</div>
+          <button class="sig-delete-btn" data-id="${sig.id}" type="button" style="width:100%;padding:.4rem;border:none;background:rgba(239,68,68,.1);color:#ef4444;border-radius:.4rem;font-size:.7rem;font-weight:600;cursor:pointer;margin-top:.4rem;transition:all 0.3s">🗑️ Hapus</button>`;
+        sigsGrid.appendChild(item);
+
+        // Delete handler
+        const delBtn = item.querySelector('.sig-delete-btn');
+        delBtn.addEventListener('mouseover', () => delBtn.style.background = 'rgba(239,68,68,.3)');
+        delBtn.addEventListener('mouseout', () => delBtn.style.background = 'rgba(239,68,68,.1)');
+        delBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (confirm('Yakin hapus tanda tangan ini?')) {
+            signatureManager.deleteSignature(sig.id);
+            renderSignatures();
+          }
+        });
+      });
+    }
+
+    saveBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const name = nameInp.value.trim();
+      if (!name) {
+        alert('Tulis nama dulu!');
+        return;
+      }
+
+      try {
+        const imageData = canvas.toDataURL('image/png');
+        const px = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        const hasContent = Array.prototype.some.call(px, (v, i) => i % 4 === 3 && v > 0);
+
+        if (!hasContent) {
+          alert('Tanda tangan dulu ya!');
+          return;
+        }
+
+        signatureManager.addSignature(name, imageData);
+
+        overlay.classList.add('show');
+        nameInp.value = '';
+        renderSignatures();
+        setTimeout(clearCanvas, 2000);
+      } catch (error) {
+        console.error('Save error:', error);
+        alert('Error menyimpan tanda tangan!');
+      }
+    });
+
+    // Listen untuk storage changes
+    window.addEventListener('storage', (e) => {
+      if (e.key === STORAGE_KEY) {
+        signatureManager.signatures = JSON.parse(e.newValue || '[]');
+        renderSignatures();
+      }
+    });
+
+    window.addEventListener('signatures_updated', () => {
+      renderSignatures();
+    });
+
+    // Setup canvas saat window di-resize
+    window.addEventListener('resize', setupCanvas);
+
+    // Initial render
+    renderSignatures();
+  }, 100);
+})();
+</script>
+
+</body>
+</html>
