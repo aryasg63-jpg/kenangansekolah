@@ -91,22 +91,9 @@
       box-shadow: 0 4px 30px rgba(0,0,0,.1);
     }
     .glass-strong {
-      background:rgba(20,30,55,.7);
-      backdrop-filter:blur(16px);
-      border:1px solid rgba(212,175,55,.2);
-      border-radius:1.5rem;
-      padding:2rem;
-    }
-    @media(max-width:768px) {
-      .glass-strong {
-        padding:1.5rem;
-      }
-    }
-    @media(max-width:480px) {
-      .glass-strong {
-        padding:1rem;
-        border-radius:1rem;
-      }
+      background: rgba(20,30,55,.7);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(212,175,55,.2);
     }
     .text-stroke {
       -webkit-text-stroke: 1px rgba(255,255,255,.2);
@@ -177,29 +164,6 @@
     }
 
     @media(max-width:768px) { .nav-links { display:none; } }
-
-    /* =========================================
-       RESPONSIVE DESIGN - MOBILE vs DESKTOP
-    ========================================= */
-    /* Mobile First (HP) */
-    @media(max-width:768px) {
-      body { font-size:14px; }
-      .section { padding:3rem 0; }
-      .container { padding:0 1rem; }
-      .section-head { margin-bottom:2rem; }
-      .section-title { font-size:clamp(1.8rem, 5vw, 2.5rem); }
-      .hero-btn { font-size:.9rem; padding:.8rem 1.8rem; }
-      .marquee-wrap { padding:.5rem 0; }
-      .marquee-track span { font-size:1.2rem; padding-right:2rem; }
-      #music-player { bottom:1rem; right:1rem; }
-      #play-btn { width:48px; height:48px; }
-    }
-
-    /* Desktop */
-    @media(min-width:769px) {
-      body { font-size:16px; }
-      .section { padding:6rem 0; }
-    }
 
     /* =========================================
        HERO
@@ -366,23 +330,6 @@
     }
     @media(min-width:768px) { .gallery-grid { grid-template-columns:repeat(4,1fr); gap:1.25rem; } }
 
-    /* Mobile vs Desktop responsive */
-    @media(max-width:480px) {
-      .section { padding:2.5rem 0; }
-      .container { padding:0 1rem; }
-      .form-input { font-size:16px; }
-      .btn { font-size:0.85rem; padding:.6rem .8rem; }
-      .sigs-grid { grid-template-columns:1fr; gap:.5rem; }
-    }
-
-    @media(max-width:768px) {
-      .gallery-grid { grid-template-columns:repeat(2,1fr); gap:.8rem; }
-      .events-grid { grid-template-columns:1fr !important; }
-      .students-grid { grid-template-columns:repeat(2,1fr) !important; gap:1rem !important; }
-      .timeline-wrap { padding:0 1rem; }
-      .sigs-grid { grid-template-columns:repeat(2,1fr); gap:.8rem; }
-    }
-
     .gallery-item {
       overflow:hidden; border-radius:1rem; cursor:pointer; position:relative;
       aspect-ratio:1/1;
@@ -391,11 +338,6 @@
     .gallery-item.big { aspect-ratio:auto; }
     @media(min-width:768px) {
       .gallery-item.big { grid-column:span 2; grid-row:span 2; }
-    }
-    @media(min-width:1024px) {
-      .events-grid { grid-template-columns:repeat(3,1fr) !important; }
-      .students-grid { grid-template-columns:repeat(4,1fr) !important; }
-      .sigs-grid { grid-template-columns:repeat(4,1fr); gap:1rem; }
     }
     .gallery-item img {
       width:100%; height:100%; object-fit:cover;
@@ -613,122 +555,36 @@
        TANDA TANGAN
     ========================================= */
     #tanda-tangan { background:var(--dark); border-top:1px solid rgba(255,255,255,.05); }
-    .sig-layout {
-      display:grid;
-      grid-template-columns:1fr;
-      gap:2.5rem;
-      width:100%;
-      max-width:100%;
-    }
-    @media(min-width:768px) {
-      .sig-layout {
-        grid-template-columns:1fr 1fr;
-        gap:2rem;
-      }
-    }
-    @media(min-width:1024px) {
-      .sig-layout {
-        grid-template-columns:1fr 1.5fr;
-        gap:3rem;
-        align-items:flex-start;
-      }
-    }
+    .sig-layout { display:flex; flex-direction:column; gap:2.5rem; }
+    @media(min-width:1024px) { .sig-layout { flex-direction:row; align-items:flex-start; } }
 
-    .sig-pad { flex:1; width:100%; }
-    .sig-board { flex:2; width:100%; }
+    .sig-pad { flex:1; }
+    .sig-board { flex:2; }
 
     .form-label { display:block; font-size:.65rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--gold); margin-bottom:.5rem; }
     .form-input {
-      width:100%;
-      background:rgba(11,19,43,.5);
-      border:1px solid rgba(255,255,255,.1);
-      border-radius:.75rem;
-      padding:.75rem 1rem;
-      color:var(--white);
-      font-size:1rem;
-      outline:none;
-      transition:all .3s;
-      box-sizing:border-box;
+      width:100%; background:rgba(11,19,43,.5); border:1px solid rgba(255,255,255,.1);
+      border-radius:.75rem; padding:.75rem 1rem; color:var(--white);
+      font-size:1rem; outline:none; transition:border-color .3s;
     }
-    .form-input:focus {
-      border-color:var(--gold);
-      box-shadow:0 0 15px rgba(212,175,55,.2);
-      background:rgba(11,19,43,.7);
-    }
-    .form-input::placeholder { color:rgba(255,255,255,.4); }
+    .form-input:focus { border-color:var(--gold); }
 
     .canvas-wrap {
-      background:rgba(11,19,43,.5);
-      border:2px dashed rgba(212,175,55,.3);
-      border-radius:.75rem;
-      overflow:visible;
-      cursor:crosshair;
-      touch-action:none;
-      position:relative;
-      margin-bottom:1rem;
-      width:100%;
-      display:block;
-      min-height:200px;
+      background:rgba(11,19,43,.8); border-radius:.75rem;
+      border:1px solid rgba(255,255,255,.1); overflow:hidden;
+      cursor:crosshair; touch-action:none; position:relative;
     }
-    #sig-canvas {
-      display:block;
-      width:100%;
-      height:200px;
-      background:rgba(11,19,43,.8);
-      cursor:crosshair;
-      border:none;
-      border-radius:.5rem;
-      touch-action:none;
-    }
-    @media(max-width:768px) {
-      #sig-canvas { height:160px; }
-    }
-    @media(min-width:1024px) {
-      #sig-canvas { height:240px; }
-    }
+    #sig-canvas { display:block; width:100%; height:180px; }
 
     .btn {
       flex:1; display:flex; align-items:center; justify-content:center; gap:.5rem;
-      padding:.75rem 1rem; border-radius:.75rem; font-size:.9rem; font-weight:700;
-      cursor:pointer; transition:all .3s; border:none;
-      min-width:0;
+      padding:.75rem 1rem; border-radius:.75rem; font-size:.9rem; font-weight:700; cursor:pointer; transition:all .3s;
     }
-    .btn-ghost {
-      background:none;
-      border:1px solid rgba(255,255,255,.1);
-      color:var(--gray);
-    }
-    .btn-ghost:hover {
-      background:rgba(255,255,255,.05);
-      color:var(--white);
-      border-color:rgba(212,175,55,.3);
-    }
-    .btn-primary {
-      background:var(--gold);
-      border:none;
-      color:var(--dark);
-    }
-    .btn-primary:hover {
-      background:var(--goldlight);
-      box-shadow:0 0 20px rgba(212,175,55,.4);
-      transform:translateY(-2px);
-    }
-    .btn-primary:disabled {
-      opacity:.4;
-      cursor:not-allowed;
-    }
-    .btn svg {
-      flex-shrink:0;
-    }
-    @media(max-width:480px) {
-      .btn {
-        padding:.6rem .8rem;
-        font-size:.8rem;
-      }
-      .btn svg {
-        display:none;
-      }
-    }
+    .btn-ghost { background:none; border:1px solid rgba(255,255,255,.1); color:var(--gray); }
+    .btn-ghost:hover { background:rgba(255,255,255,.05); color:var(--white); }
+    .btn-primary { background:var(--gold); border:none; color:var(--dark); }
+    .btn-primary:hover { background:var(--goldlight); box-shadow:0 0 20px rgba(212,175,55,.4); }
+    .btn-primary:disabled { opacity:.4; cursor:not-allowed; }
 
     .sig-saved-overlay {
       display:none; position:absolute; inset:0;
@@ -748,57 +604,17 @@
     .sigs-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; }
     @media(min-width:500px) { .sigs-grid { grid-template-columns:repeat(3,1fr); } }
 
-    /* Mobile: Single Column untuk signature section */
-    @media(max-width:768px) {
-      .sig-layout { flex-direction:column !important; gap:1.5rem !important; }
-      .sig-pad { flex:1; }
-      .sig-board { flex:1; }
-      .sigs-grid { grid-template-columns:repeat(2,1fr); gap:.8rem; }
-      #sig-canvas { height:140px; }
-    }
-
-    /* Desktop: Full layout untuk signature section */
-    @media(min-width:769px) {
-      .sig-layout { display:grid; grid-template-columns:1fr 1.5fr; align-items:flex-start; gap:3rem; }
-      .sigs-grid { grid-template-columns:repeat(4,1fr); gap:1.2rem; }
-    }
-
-    .sigs-empty {
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      min-height:200px;
-      color:rgba(156,163,175,.4);
-      text-align:center;
-      padding:2rem 1rem;
-    }
-    .sigs-empty svg { width:60px; height:60px; margin-bottom:1rem; opacity:.5; }
-    .sigs-empty p { font-size:1rem; margin-bottom:.5rem; }
-    .sigs-empty small { font-size:0.85rem; opacity:.7; }
-
-    .sigs-grid {
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:1rem;
-      width:100%;
-    }
-    @media(min-width:500px) { .sigs-grid { grid-template-columns:repeat(3,1fr); gap:0.8rem; } }
-    @media(min-width:768px) { .sigs-grid { grid-template-columns:repeat(2,1fr); gap:0.8rem; } }
-    @media(min-width:1024px) { .sigs-grid { grid-template-columns:repeat(4,1fr); gap:1rem; } }
-
     .sig-item {
       background:rgba(11,19,43,.4); border-radius:1rem; padding:1rem;
       border:1px solid rgba(255,255,255,.05); text-align:center;
-      transition:all .3s; position:relative; overflow:hidden;
-      display:flex; flex-direction:column; gap:.5rem;
+      transition:border-color .3s, transform .3s;
     }
-    .sig-item:hover { border-color:rgba(212,175,55,.3); transform:translateY(-4px); box-shadow:0 8px 20px rgba(212,175,55,.1); }
-    .sig-item-img { width:100%; height:80px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.04); border-radius:.5rem; padding:.5rem; overflow:hidden; }
-    .sig-item-img img { max-height:100%; max-width:100%; object-fit:contain; filter:drop-shadow(0 0 3px rgba(212,175,55,.7)); transition:transform .3s; }
+    .sig-item:hover { border-color:rgba(212,175,55,.3); transform:translateY(-4px); }
+    .sig-item-img { height:80px; display:flex; align-items:center; justify-content:center; margin-bottom:.75rem; background:rgba(255,255,255,.04); border-radius:.5rem; padding:.5rem; }
+    .sig-item-img img { max-height:100%; max-width:100%; filter:drop-shadow(0 0 3px rgba(212,175,55,.7)); transition:transform .3s; }
     .sig-item:hover .sig-item-img img { transform:scale(1.1); }
-    .sig-item-name { font-family:'Dancing Script',cursive; font-size:1.2rem; font-weight:600; word-break:break-word; }
-    .sig-item-date { font-size:.6rem; color:rgba(212,175,55,.4); letter-spacing:.1em; text-transform:uppercase; }
+    .sig-item-name { font-family:'Dancing Script',cursive; font-size:1.2rem; }
+    .sig-item-date { font-size:.6rem; color:rgba(212,175,55,.4); letter-spacing:.1em; text-transform:uppercase; margin-top:.25rem; }
 
     /* =========================================
        MUSIC PLAYER
@@ -1038,95 +854,7 @@
 <!-- ============================================================
      QUOTES (hidden, dipakai JS)
 ============================================================ -->
-<script>
-// ============================================================
-// DATA — EDIT SEMUA BAGIAN DI BAWAH INI
-// ============================================================
-
-const QUOTES = [
-  "Masa SMP adalah masa di mana kita belajar arti persahabatan yang sesungguhnya.",
-  "Bukan tentang seberapa lama kita bersama, tapi seberapa dalam kenangan yang kita ciptakan.",
-  "Kelas VIII: Tempat di mana tawa paling keras dan cerita paling konyol tercipta.",
-  "Kita mungkin akan berpisah jalan, tapi kenangan di kelas ini akan selalu jadi rumah.",
-  "Terima kasih untuk setiap contekan PR, candaan di jam kosong, dan dukungan saat ujian.",
-  "Jangan pernah lupakan masa-masa di mana masalah terbesar kita hanyalah PR Matematika.",
-  "Setiap sudut sekolah ini punya cerita tentang kita.",
-  "Kita masuk sebagai orang asing, dan keluar sebagai keluarga.",
-  "Kenangan indah tidak akan pernah pudar, ia hanya tersimpan rapi di sudut hati.",
-  "Sampai jumpa di puncak kesuksesan, teman-teman!"
-];
-
-// Foto galeri — taruh file di folder "foto/" (galeri1.jpg, galeri2.jpg, dst)
-const GALLERY = Array.from({length:12}, (_,i) => ({
-  src:     `foto/galeri${i+1}.jpg`,
-  fallback:`https://picsum.photos/seed/gallery${i+1}/800/800`,
-  caption: `Kenangan ${i+1}`
-}));
-
-// Kegiatan / events
-const EVENTS = [
-  { title:"Study Tour Bali",    date:"15 Mei 2022",      desc:"Perjalanan tak terlupakan mengunjungi pantai dan budaya Bali bersama teman sekelas.",   src:"foto/event1.jpg", fallback:"https://picsum.photos/seed/event1/600/400" },
-  { title:"Class Meeting",      date:"10 Des 2022",       desc:"Juara 1 lomba tarik tambang antar kelas! Kekompakan Kelas VIII memang tiada duanya.",    src:"foto/event2.jpg", fallback:"https://picsum.photos/seed/event2/600/400" },
-  { title:"Hari Guru Nasional", date:"25 Nov 2022",       desc:"Memberikan kejutan kecil untuk wali kelas tercinta. Penuh haru dan tawa.",              src:"foto/event3.jpg", fallback:"https://picsum.photos/seed/event3/600/400" },
-  { title:"Lomba 17 Agustus",   date:"17 Ags 2022",       desc:"Keseruan lomba balap karung dan makan kerupuk di lapangan sekolah.",                    src:"foto/event4.jpg", fallback:"https://picsum.photos/seed/event4/600/400" },
-  { title:"Pentas Seni",        date:"20 Feb 2023",       desc:"Penampilan drama musikal dari Kelas VIII yang memukau seluruh sekolah.",                 src:"foto/event5.jpg", fallback:"https://picsum.photos/seed/event5/600/400" },
-  { title:"Buka Puasa Bersama", date:"10 Apr 2023",       desc:"Momen kebersamaan di bulan Ramadhan, berbagi cerita sambil menunggu waktu berbuka.",    src:"foto/event6.jpg", fallback:"https://picsum.photos/seed/event6/600/400" },
-  { title:"Kerja Bakti Kelas",  date:"5 Mar 2022",        desc:"Membersihkan dan menghias kelas bersama agar lebih nyaman untuk belajar.",               src:"foto/event7.jpg", fallback:"https://picsum.photos/seed/event7/600/400" },
-  { title:"Kunjungan Museum",   date:"12 Okt 2021",       desc:"Belajar sejarah langsung dari sumbernya. Seru dan menambah wawasan.",                   src:"foto/event8.jpg", fallback:"https://picsum.photos/seed/event8/600/400" },
-  { title:"Ujian Praktek",      date:"15 Mar 2023",       desc:"Tegang tapi seru saat ujian praktek kesenian dan olahraga.",                            src:"foto/event9.jpg", fallback:"https://picsum.photos/seed/event9/600/400" },
-  { title:"Malam Perpisahan",   date:"20 Jun 2023",       desc:"Malam puncak penuh air mata dan pelukan hangat sebelum melangkah ke jenjang berikutnya.", src:"foto/event10.jpg", fallback:"https://picsum.photos/seed/event10/600/400" },
-];
-
-// Timeline
-const TIMELINE = [
-  {
-    year:"2024/2025", title:"Awal Perjumpaan",
-    desc:"Hari pertama masuk sekolah, masih malu-malu dan canggung. Masa orientasi yang penuh kejutan.",
-    src:"foto/timeline1.jpg", fallback:"https://picsum.photos/seed/time1/400/300"
-  },
-  {
-    year:"2025/2026", title:"Masa Paling Seru",
-    desc:"Mulai akrab satu sama lain. Banyak kegiatan seru seperti class meeting dan study tour pertama.",
-    src:"foto/timeline2.jpg", fallback:"https://picsum.photos/seed/time2/400/300"
-  },
-  {
-    year:"2026/2027", title:"Persiapan Kelulusan",
-    desc:"Fokus ujian, tapi tetap menyempatkan waktu untuk membuat kenangan terakhir sebelum berpisah.",
-    src:"foto/timeline3.jpg", fallback:"https://picsum.photos/seed/time3/400/300"
-  }
-];
-
-// Data siswa
-// ⬇ EDIT: ganti nama, cita-cita, pesan, kesan, dan nama file foto
-// 1 Arya Suganda 
-// 2 Audy zambalogina 
-// 3 Elsa adeylia putri 
-// 4 Faiha Afriza 
-// 5 putri Laila Yumna 
-// 6 ikrom Lutfi 
-// 7 .m lisky anugrah 
-// 8 .Nurul mujahidah Fillah 
-// 9. samaituqi arina Sofia 
-// 10 M. Nabil Ar Rasyid
-const STUDENTS = [
-  { id:1,  name:"Arya Suganda",             cita:"Programmer",           pesan:"Jangan lupa ngerjain PR ya guys!",                 kesan:"Kelas paling berisik tapi paling ngangenin.",               src:"foto/siswa1.jpg",  fallback:"https://picsum.photos/seed/std1/200/200"  },
-  { id:2,  name:"Audy Zambwalogina",        cita:"Dokter Anak",          pesan:"Semoga kita semua sukses di masa depan.",          kesan:"Senang bisa kenal kalian semua, sahabat terbaik.",          src:"foto/siswa2.jpg",  fallback:"https://picsum.photos/seed/std2/200/200"  },
-  { id:3,  name:"Elsa adeylia putri",       cita:"Pengusaha",            pesan:"Kalo sukses jangan sombong-sombong.",              kesan:"Banyak banget kejadian konyol di kelas ini.",               src:"foto/siswa3.jpg",  fallback:"https://picsum.photos/seed/std3/200/200"  },
-  { id:4,  name:"Faiha Afriza",             cita:"Penulis",              pesan:"Teruslah bermimpi dan berkarya.",                  kesan:"Wali kelas kita yang paling sabar ngadepin kita.",          src:"foto/siswa4.jpg",  fallback:"https://picsum.photos/seed/std4/200/200"  },
-  { id:5,  name:"Putri Laila Yumna",        cita:"Atlet Basket",         pesan:"Jangan lupa olahraga biar sehat.",                 kesan:"Main basket bareng pas jam istirahat paling seru.",         src:"foto/siswa5.jpg",  fallback:"https://picsum.photos/seed/std5/200/200"  },
-  { id:6,  name:"Ikrom Lutfi",              cita:"Desainer Grafis",      pesan:"Warnai hidupmu dengan hal positif.",               kesan:"Suka banget pas kita hias kelas bareng-bareng.",            src:"foto/siswa6.jpg",  fallback:"https://picsum.photos/seed/std6/200/200"  },
-  { id:7,  name:"M. Lisky Anugrah",         cita:"Polisi",               pesan:"Tetap disiplin dan semangat belajar.",             kesan:"Sering dihukum bareng karena telat, haha.",                 src:"foto/siswa7.jpg",  fallback:"https://picsum.photos/seed/std7/200/200"  },
-  { id:8,  name:"Nurul Mujahidah Fillah",   cita:"Penyanyi",             pesan:"Kejar mimpimu setinggi langit.",                   kesan:"Pentas seni kelas kita yang paling pecah!",                 src:"foto/siswa8.jpg",  fallback:"https://picsum.photos/seed/std8/200/200"  },
-  { id:9,  name:"Samaituqi Arina Sofia",    cita:"Arsitek",              pesan:"Bangun masa depanmu dari sekarang.",               kesan:"Suka gambar-gambar di buku tulis pas jam pelajaran.",       src:"foto/siswa9.jpg",  fallback:"https://picsum.photos/seed/std9/200/200"  },
-  { id:10, name:"M. Nabil Ar Rasyid",       cita:"Guru",                 pesan:"Ilmu itu penting, jangan malas belajar.",          kesan:"Sering ngajarin temen-temen pas mau ujian.",                src:"foto/siswa10.jpg", fallback:"https://picsum.photos/seed/std10/200/200" },
-];
-
-// Link video YouTube (ganti dengan link perpisahan kalian)
-const VIDEO_EMBED = "https://www.youtube.com/embed/dQw4w9WgXcQ?controls=1&rel=0";
-// ============================================================
-// END DATA
-// ============================================================
-</script>
+<script src="data.js"></script>
 
 <!-- ============================================================
      EVENTS / CERITA KITA
@@ -1498,280 +1226,159 @@ document.getElementById('lightbox-close').addEventListener('click', () => {
 
 })();
 
-// ====================================================
-// DEVICE DETECTION & RESPONSIVE INITIALIZATION
-// ====================================================
-(function initDeviceDetection() {
-  // Check if device mode is set from index.html
-  const storedMode = localStorage.getItem('kenangan_device_mode');
-  const isMobileDevice = window.innerWidth <= 768;
-  const mode = storedMode || (isMobileDevice ? 'mobile' : 'desktop');
-  
-  document.documentElement.setAttribute('data-device', mode);
-  console.log('🎯 Device Mode:', mode);
-  
-  // Update on resize
-  window.addEventListener('resize', () => {
-    const isMobile = window.innerWidth <= 768;
-    const newMode = storedMode || (isMobile ? 'mobile' : 'desktop');
-    document.documentElement.setAttribute('data-device', newMode);
-  });
+// ─── SHARED SIGNATURE ENGINE ─────────────────────────────────
+// localStorage key: 'kelas8_signatures'
+// BroadcastChannel: 'kelas8_sig_sync'  (real-time antar tab)
+// ─────────────────────────────────────────────────────────────
+const SIG_KEY = 'kelas8_signatures';
+const sigCh   = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('kelas8_sig_sync') : null;
 
-  // Optional: Add button to go back to device selector
-  const navbar = document.getElementById('navbar');
-  if (navbar) {
-    const backBtn = document.createElement('a');
-    backBtn.href = 'index.html';
-    backBtn.style.cssText = 'position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);padding:0.5rem 1rem;background:rgba(212,175,55,.1);border-radius:6px;color:var(--gold);font-size:0.8rem;text-decoration:none;transition:all 0.3s;border:1px solid rgba(212,175,55,.2)';
-    backBtn.textContent = '← Ubah Device';
-    backBtn.onmouseover = () => backBtn.style.background = 'var(--gold)' && (backBtn.style.color = 'var(--dark)');
-    backBtn.onmouseout = () => backBtn.style.background = 'rgba(212,175,55,.1)' && (backBtn.style.color = 'var(--gold)');
-    navbar.style.position = 'relative';
-    navbar.appendChild(backBtn);
-  }
-})();
-
-// ─── Signature Storage Manager ────────────────────────────────
-const STORAGE_KEY = 'kenangan_signatures_v1';
-
-class SignatureStorageManager {
-  constructor() {
-    this.signatures = this.loadSignatures();
-  }
-
-  loadSignatures() {
-    try {
-      const data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : [];
-    } catch (error) {
-      console.error('Error loading signatures:', error);
-      return [];
-    }
-  }
-
-  saveSignatures() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.signatures));
-      // Trigger custom event untuk sinkronisasi antar tab
-      window.dispatchEvent(new CustomEvent('signatures_updated', { 
-        detail: { signatures: this.signatures } 
-      }));
-    } catch (error) {
-      console.error('Error saving signatures:', error);
-    }
-  }
-
-  addSignature(name, imageData) {
-    const date = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
-    this.signatures.unshift({ id: Date.now(), name, imageData, date });
-    this.saveSignatures();
-  }
-
-  deleteSignature(id) {
-    this.signatures = this.signatures.filter(sig => sig.id !== id);
-    this.saveSignatures();
-  }
-
-  getAll() {
-    return this.signatures;
-  }
+// Load dari localStorage → array of {id, name, image, date}
+function sigLoad() {
+  try { return JSON.parse(localStorage.getItem(SIG_KEY) || '[]'); } catch(e) { return []; }
+}
+function sigSave(arr) {
+  try { localStorage.setItem(SIG_KEY, JSON.stringify(arr)); } catch(e) {}
+}
+function sigDelete(id) {
+  const arr = sigLoad().filter(s => s.id !== id);
+  sigSave(arr);
+  if (sigCh) sigCh.postMessage({ type: 'delete', id });
+  renderSigItem_remove(id);
+}
+function sigAdd(entry) {
+  const arr = sigLoad();
+  arr.unshift(entry);
+  sigSave(arr);
+  if (sigCh) sigCh.postMessage({ type: 'add', entry });
 }
 
-const signatureManager = new SignatureStorageManager();
+// ── DOM helpers ───────────────────────────────────────────────
+function renderSigItem_add(entry) {
+  const grid  = document.getElementById('sigs-grid');
+  const empty = document.getElementById('sigs-empty');
+  if (!grid) return;
 
-// ─── Signature Board ─────────────────────────────────────────
+  // Remove existing if any (avoid duplicate on sync)
+  const existing = document.getElementById('sig-' + entry.id);
+  if (existing) return;
+
+  empty.style.display = 'none';
+
+  const div = document.createElement('div');
+  div.className = 'sig-item';
+  div.id = 'sig-' + entry.id;
+  div.innerHTML = `
+    <button class="sig-del-btn" title="Hapus tanda tangan" onclick="sigDelete('${entry.id}')">✕</button>
+    <div class="sig-item-img"><img src="${entry.image}" alt="${entry.name}" /></div>
+    <div class="sig-item-name handwriting">${entry.name}</div>
+    <div class="sig-item-date">${entry.date}</div>`;
+  grid.prepend(div);
+}
+
+function renderSigItem_remove(id) {
+  const el = document.getElementById('sig-' + id);
+  if (el) el.remove();
+  const grid = document.getElementById('sigs-grid');
+  const empty = document.getElementById('sigs-empty');
+  if (grid && empty && grid.children.length === 0) empty.style.display = 'flex';
+}
+
+function renderAllSigs() {
+  sigLoad().forEach(renderSigItem_add);
+}
+
+// ── BroadcastChannel listener (cross-tab sync) ────────────────
+if (sigCh) {
+  sigCh.onmessage = ({ data }) => {
+    if (data.type === 'add')    renderSigItem_add(data.entry);
+    if (data.type === 'delete') renderSigItem_remove(data.id);
+  };
+}
+
+// ── Signature Pad ─────────────────────────────────────────────
 (function initSignature() {
-  // Delay initialization untuk memastikan canvas ada di DOM
-  setTimeout(() => {
-    const canvas  = document.getElementById('sig-canvas');
-    if (!canvas) {
-      console.warn('Canvas not found, retrying...');
-      setTimeout(initSignature, 500);
-      return;
-    }
+  const canvas  = document.getElementById('sig-canvas');
+  const ctx     = canvas.getContext('2d');
+  const nameInp = document.getElementById('sig-name');
+  const saveBtn = document.getElementById('sig-save');
+  const clearBtn= document.getElementById('sig-clear');
+  const overlay = document.getElementById('sig-saved-overlay');
+  let drawing   = false;
 
-    const ctx     = canvas.getContext('2d');
-    const nameInp = document.getElementById('sig-name');
-    const saveBtn = document.getElementById('sig-save');
-    const clearBtn= document.getElementById('sig-clear');
-    const overlay = document.getElementById('sig-saved-overlay');
-    const sigsGrid= document.getElementById('sigs-grid');
-    const empty   = document.getElementById('sigs-empty');
-    let drawing   = false;
+  function setupCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr  = window.devicePixelRatio || 1;
+    canvas.width  = rect.width  * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#D4AF37'; ctx.lineWidth = 2.5;
+  }
+  setupCanvas();
 
-    // Hi-DPI setup
-    function setupCanvas() {
-      try {
-        const wrap  = canvas.parentElement;
-        const rect  = wrap.getBoundingClientRect();
-        const dpr   = window.devicePixelRatio || 1;
-        const h     = parseInt(getComputedStyle(canvas).height) || 200;
+  function coords(e) {
+    const r = canvas.getBoundingClientRect();
+    const s = e.touches ? e.touches[0] : e;
+    return { x: s.clientX - r.left, y: s.clientY - r.top };
+  }
 
-        canvas.width  = rect.width * dpr;
-        canvas.height = h * dpr;
-        ctx.scale(dpr, dpr);
-        ctx.lineCap   = 'round';
-        ctx.lineJoin  = 'round';
-        ctx.strokeStyle = '#D4AF37';
-        ctx.lineWidth   = 2.5;
-        ctx.lineDashOffset = 0;
-      } catch (e) {
-        console.error('Canvas setup error:', e);
-      }
-    }
+  canvas.addEventListener('mousedown',  e => { drawing=true; ctx.beginPath(); const {x,y}=coords(e); ctx.moveTo(x,y); });
+  canvas.addEventListener('mousemove',  e => { if(!drawing)return; const {x,y}=coords(e); ctx.lineTo(x,y); ctx.stroke(); });
+  canvas.addEventListener('mouseup',    () => drawing=false);
+  canvas.addEventListener('mouseleave', () => drawing=false);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing=true; ctx.beginPath(); const {x,y}=coords(e); ctx.moveTo(x,y); }, {passive:false});
+  canvas.addEventListener('touchmove',  e => { e.preventDefault(); if(!drawing)return; const {x,y}=coords(e); ctx.lineTo(x,y); ctx.stroke(); }, {passive:false});
+  canvas.addEventListener('touchend',   () => drawing=false);
 
-    setupCanvas();
+  function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    overlay.classList.remove('show');
+  }
+  clearBtn.addEventListener('click', clearCanvas);
 
-    function coords(e) {
-      const rect = canvas.getBoundingClientRect();
-      const src = e.touches ? e.touches[0] : e;
-      return {
-        x: (src.clientX - rect.left) * (canvas.width / rect.width),
-        y: (src.clientY - rect.top) * (canvas.height / rect.height)
-      };
-    }
+  saveBtn.addEventListener('click', () => {
+    const name = nameInp.value.trim();
+    if (!name) return alert('Tulis nama dulu!');
+    const px = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+    if (!Array.prototype.some.call(px, (v,i) => i%4===3 && v>0)) return alert('Tanda tangan dulu ya!');
 
-    // Mouse events
-    canvas.addEventListener('mousedown', (e) => {
-      drawing = true;
-      ctx.beginPath();
-      const {x, y} = coords(e);
-      ctx.moveTo(x, y);
-    });
+    const entry = {
+      id:    Date.now().toString(),
+      name,
+      image: canvas.toDataURL('image/png'),
+      date:  new Date().toLocaleDateString('id-ID', {day:'numeric',month:'short',year:'numeric'})
+    };
 
-    canvas.addEventListener('mousemove', (e) => {
-      if (!drawing) return;
-      const {x, y} = coords(e);
-      ctx.lineTo(x, y);
-      ctx.stroke();
-    });
+    sigAdd(entry);
+    renderSigItem_add(entry);
 
-    canvas.addEventListener('mouseup', () => {
-      drawing = false;
-    });
-
-    canvas.addEventListener('mouseleave', () => {
-      drawing = false;
-    });
-
-    // Touch events
-    canvas.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      drawing = true;
-      ctx.beginPath();
-      const {x, y} = coords(e);
-      ctx.moveTo(x, y);
-    }, { passive: false });
-
-    canvas.addEventListener('touchmove', (e) => {
-      e.preventDefault();
-      if (!drawing) return;
-      const {x, y} = coords(e);
-      ctx.lineTo(x, y);
-      ctx.stroke();
-    }, { passive: false });
-
-    canvas.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      drawing = false;
-    }, { passive: false });
-
-    function clearCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      overlay.classList.remove('show');
-    }
-
-    clearBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      clearCanvas();
-    });
-
-    // Render signatures dari storage
-    function renderSignatures() {
-      const sigs = signatureManager.getAll();
-      sigsGrid.innerHTML = '';
-
-      if (sigs.length === 0) {
-        empty.style.display = 'flex';
-        return;
-      }
-
-      empty.style.display = 'none';
-
-      sigs.forEach(sig => {
-        const item = document.createElement('div');
-        item.className = 'sig-item';
-        item.innerHTML = `
-          <div class="sig-item-img"><img src="${sig.imageData}" alt="${sig.name}" loading="lazy" /></div>
-          <div class="sig-item-name handwriting">${sig.name}</div>
-          <div class="sig-item-date">${sig.date}</div>
-          <button class="sig-delete-btn" data-id="${sig.id}" type="button" style="width:100%;padding:.4rem;border:none;background:rgba(239,68,68,.1);color:#ef4444;border-radius:.4rem;font-size:.7rem;font-weight:600;cursor:pointer;margin-top:.4rem;transition:all 0.3s">🗑️ Hapus</button>`;
-        sigsGrid.appendChild(item);
-
-        // Delete handler
-        const delBtn = item.querySelector('.sig-delete-btn');
-        delBtn.addEventListener('mouseover', () => delBtn.style.background = 'rgba(239,68,68,.3)');
-        delBtn.addEventListener('mouseout', () => delBtn.style.background = 'rgba(239,68,68,.1)');
-        delBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          if (confirm('Yakin hapus tanda tangan ini?')) {
-            signatureManager.deleteSignature(sig.id);
-            renderSignatures();
-          }
-        });
-      });
-    }
-
-    saveBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const name = nameInp.value.trim();
-      if (!name) {
-        alert('Tulis nama dulu!');
-        return;
-      }
-
-      try {
-        const imageData = canvas.toDataURL('image/png');
-        const px = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-        const hasContent = Array.prototype.some.call(px, (v, i) => i % 4 === 3 && v > 0);
-
-        if (!hasContent) {
-          alert('Tanda tangan dulu ya!');
-          return;
-        }
-
-        signatureManager.addSignature(name, imageData);
-
-        overlay.classList.add('show');
-        nameInp.value = '';
-        renderSignatures();
-        setTimeout(clearCanvas, 2000);
-      } catch (error) {
-        console.error('Save error:', error);
-        alert('Error menyimpan tanda tangan!');
-      }
-    });
-
-    // Listen untuk storage changes
-    window.addEventListener('storage', (e) => {
-      if (e.key === STORAGE_KEY) {
-        signatureManager.signatures = JSON.parse(e.newValue || '[]');
-        renderSignatures();
-      }
-    });
-
-    window.addEventListener('signatures_updated', () => {
-      renderSignatures();
-    });
-
-    // Setup canvas saat window di-resize
-    window.addEventListener('resize', setupCanvas);
-
-    // Initial render
-    renderSignatures();
-  }, 100);
+    overlay.classList.add('show');
+    nameInp.value = '';
+    setTimeout(clearCanvas, 2000);
+  });
 })();
+
+// ── Init: render all saved signatures ─────────────────────────
+renderAllSigs();
+
 </script>
+
+<!-- Style tambahan untuk delete button -->
+<style>
+  .sig-item { position: relative; }
+  .sig-del-btn {
+    position: absolute; top: .5rem; right: .5rem;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(220,38,38,.15); border: 1px solid rgba(220,38,38,.3);
+    color: #f87171; font-size: .6rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .2s, background .2s;
+    line-height: 1; padding: 0;
+  }
+  .sig-item:hover .sig-del-btn { opacity: 1; }
+  .sig-del-btn:hover { background: rgba(220,38,38,.4); color: #fff; }
+</style>
 
 </body>
 </html>
