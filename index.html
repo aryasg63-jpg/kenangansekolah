@@ -28,7 +28,7 @@
       overflow-y: auto;
       overflow-x: hidden;
       -webkit-overflow-scrolling: touch;
-      cursor: none;
+      cursor: auto;
       padding: 2rem 0;
     }
     @media (hover:none) and (pointer:coarse) { body { cursor: auto; } }
@@ -169,14 +169,6 @@
       animation: fadeUp .8s .5s ease both;
     }
 
-    /* Custom cursor */
-    #cur-dot, #cur-ring {
-      position:fixed; top:0; left:0; border-radius:50%;
-      pointer-events:none; z-index:9999; transform:translate(-50%,-50%);
-    }
-    #cur-dot  { width:10px; height:10px; background:var(--gold); mix-blend-mode:screen; transition:transform .1s; }
-    #cur-ring { width:36px; height:36px; border:2px solid rgba(212,175,55,.5); transition:all .25s ease; }
-    @media (hover:none) and (pointer:coarse) { #cur-dot, #cur-ring { display:none; } }
   </style>
 </head>
 <body>
@@ -184,8 +176,6 @@
 <canvas id="bg-canvas"></canvas>
 <div class="orb orb1"></div>
 <div class="orb orb2"></div>
-<div id="cur-dot"></div>
-<div id="cur-ring"></div>
 
 <div class="wrap">
   <div class="badge"><span class="badge-dot"></span>Angkatan 2023</div>
@@ -266,18 +256,39 @@
   })();
 })();
 
-// ── Sig count badge ────────────────────────────────────────────
+/* ── Sig count badge (Firebase Firestore realtime) ────────────── */
 (function() {
-  try {
-    const sigs = JSON.parse(localStorage.getItem('kelas8_signatures') || '[]');
-    if (sigs.length > 0) {
-      ['sig-badge-desktop', 'sig-badge-mobile'].forEach(id => {
-        const el = document.getElementById(id);
-        el.textContent = sigs.length + ' TTD';
+  const ids = ['sig-badge-desktop', 'sig-badge-mobile'];
+
+  function setCount(count) {
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (count > 0) {
+        el.textContent = count + ' TTD';
         el.classList.add('show');
+      } else {
+        el.textContent = '';
+        el.classList.remove('show');
+      }
+    });
+  }
+
+  (async function initBadge() {
+    try {
+      const fb = await import('./firebase-config.js');
+      const db = fb.initFirebase();
+      const ttdCol = fb.collection(db, 'ttd');
+      const q = fb.query(ttdCol);
+      fb.onSnapshot(q, (snap) => {
+        setCount(snap.size);
       });
+    } catch (e) {
+      // Keep page usable even if Firestore fails
+      // (No UI/CSS/HTML changes; just badge count)
+      console.error('Firestore badge init failed:', e);
     }
-  } catch(e) {}
+  })();
 })();
 
 // ── Auto-redirect berdasarkan device ──────────────────────────
@@ -288,25 +299,6 @@
 //   location.replace('kenangan-kelas-viii.html');
 // }
 
-// ── Custom cursor ─────────────────────────────────────────────
-(function() {
-  const dot  = document.getElementById('cur-dot');
-  const ring = document.getElementById('cur-ring');
-  let rx = 0, ry = 0;
-  window.addEventListener('mousemove', e => {
-    dot.style.left = e.clientX + 'px';
-    dot.style.top  = e.clientY + 'px';
-    rx += (e.clientX - rx) * .15;
-    ry += (e.clientY - ry) * .15;
-  }, { passive: true });
-  (function f() { ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(f); })();
-  document.addEventListener('mouseover', e => {
-    const h = e.target.closest('a,button');
-    dot.style.transform  = `translate(-50%,-50%) scale(${h ? .5 : 1})`;
-    ring.style.transform = `translate(-50%,-50%) scale(${h ? 1.6 : 1})`;
-    ring.style.background = h ? 'rgba(212,175,55,.12)' : 'transparent';
-  });
-})();
 </script>
 </body>
 </html>
