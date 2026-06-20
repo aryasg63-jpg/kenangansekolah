@@ -292,43 +292,117 @@
     .ev-card-body h3{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:900;margin-bottom:.4rem;color:var(--gold)}
     .ev-card-body p{font-size:.8rem;color:var(--gray);line-height:1.6}
 
-    /* ─── STUDENTS — GRID RATA (semua siswa setara) ──── */
-    #siswa{background:var(--light);position:relative;overflow:hidden}
-    .stu-grid{
-      display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;
-      padding-top:.25rem;
-    }
-    .stu-card{
-      border-radius:1.25rem;overflow:hidden;text-align:center;
-      background:rgba(20,30,55,.7);backdrop-filter:blur(16px);
-      border:1px solid rgba(255,255,255,.06);
-      padding:1.35rem 1rem;
-      transition:transform .25s,border-color .25s;
-    }
-    .stu-card:active{transform:scale(.97);border-color:rgba(212,175,55,.3)}
-    .stu-av{
-      width:84px;height:84px;border-radius:50%;overflow:hidden;
-      border:1.5px solid rgba(212,175,55,.3);margin:0 auto .75rem;position:relative;
-    }
-    .stu-av img{width:100%;height:100%;object-fit:cover;filter:grayscale(.5);transition:filter .3s}
-    .stu-card:active .stu-av img{filter:grayscale(0)}
-    .stu-num{
-      position:absolute;bottom:-2px;right:-2px;
-      width:20px;height:20px;border-radius:50%;background:var(--gold);color:var(--dark);
-      font-size:.55rem;font-weight:800;display:flex;align-items:center;justify-content:center;
-      border:1.5px solid var(--light);
-    }
-    .stu-name{font-family:'Playfair Display',serif;font-size:.92rem;font-weight:900;line-height:1.25;margin-bottom:.15rem}
-    .stu-role{font-size:.56rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem}
-    .stu-info{
-      text-align:left;background:rgba(11,19,43,.5);padding:.7rem .65rem;
-      border-radius:.7rem;border:1px solid rgba(255,255,255,.05);
-    }
-    .stu-info-label{font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.15rem}
-    .stu-info-text{font-size:.68rem;color:var(--gray);font-style:italic;line-height:1.45}
-    .stu-info-div{width:100%;height:1px;background:rgba(255,255,255,.05);margin:.5rem 0}
-    @media(min-width:420px){ .stu-grid{grid-template-columns:repeat(2,1fr);gap:1.1rem} }
-    @media(min-width:540px){ .stu-grid{grid-template-columns:repeat(3,1fr)} }
+    /* ─── STUDENTS — GALLERY STYLE ──── */
+#siswa{
+  background:var(--light);
+  position:relative;
+  overflow:hidden;
+}
+
+.stu-grid{
+  display:flex;
+  gap:1rem;
+  overflow-x:auto;
+  padding:.25rem 0 1rem;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+}
+
+.stu-card{
+  flex:0 0 78vw;
+  max-width:290px;
+  scroll-snap-align:center;
+
+  border-radius:1.5rem;
+  overflow:hidden;
+
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+
+  transition:.3s;
+}
+
+.stu-card:active{
+  transform:scale(.97);
+}
+
+.stu-cover{
+  position:relative;
+  height:260px;
+  overflow:hidden;
+}
+
+.stu-cover img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.stu-badge{
+  position:absolute;
+  left:.8rem;
+  bottom:.8rem;
+
+  background:rgba(11,19,43,.92);
+
+  color:var(--gold);
+
+  padding:.3rem .9rem;
+  border-radius:999px;
+
+  font-size:.65rem;
+  font-weight:700;
+
+  border:1px solid rgba(212,175,55,.2);
+}
+
+.stu-body{
+  padding:1.2rem;
+}
+
+.stu-name{
+  font-family:'Playfair Display',serif;
+  font-size:1.35rem;
+  font-weight:900;
+  line-height:1.15;
+
+  color:var(--gold);
+
+  margin-bottom:.4rem;
+}
+
+.stu-role{
+  display:block;
+
+  font-size:.65rem;
+  font-weight:700;
+
+  letter-spacing:.15em;
+  text-transform:uppercase;
+
+  color:var(--gold);
+
+  margin-bottom:1rem;
+}
+
+.stu-message{
+  color:var(--gray);
+  line-height:1.7;
+  font-size:.82rem;
+}
+
+.stu-divider{
+  height:1px;
+  background:rgba(255,255,255,.06);
+  margin:1rem 0;
+}
+
+.stu-kesan{
+  color:var(--gray);
+  font-size:.75rem;
+  font-style:italic;
+  line-height:1.6;
+}
 
     /* ─── TIMELINE — VISUAL CARDS ────────────────────── */
     #timeline{background:var(--dark)}
@@ -808,26 +882,48 @@ $('hero-bg').classList.add('loaded');
   });
 })();
 
-// ── Students: grid rata, semua siswa diperlakukan sama ────────
+// ── Students Gallery Style ─────────────────────────
 (function() {
   const grid = $('stu-grid');
+
   STUDENTS.forEach(s => {
     const c = document.createElement('div');
+
     c.className = 'stu-card fade';
+
     c.innerHTML = `
-      <div class="stu-av">
-        <img src="${s.src}" alt="${s.name}" loading="lazy" onerror="this.src='${s.fb}'"/>
-        <span class="stu-num">${s.id}</span>
+      <div class="stu-cover">
+        <img src="${s.src}"
+             alt="${s.name}"
+             loading="lazy"
+             onerror="this.src='${s.fb}'">
+
+        <span class="stu-badge">${s.id}</span>
       </div>
-      <div class="stu-name">${s.name}</div>
-      <div class="stu-role">${s.cita}</div>
-      <div class="stu-info">
-        <span class="stu-info-label">Pesan</span>
-        <p class="stu-info-text">"${s.pesan}"</p>
-        <div class="stu-info-div"></div>
-        <span class="stu-info-label">Kesan</span>
-        <p class="stu-info-text">"${s.kesan}"</p>
-      </div>`;
+
+      <div class="stu-body">
+
+        <div class="stu-name">
+          ${s.name}
+        </div>
+
+        <span class="stu-role">
+          ${s.cita}
+        </span>
+
+        <p class="stu-message">
+          "${s.pesan}"
+        </p>
+
+        <div class="stu-divider"></div>
+
+        <p class="stu-kesan">
+          "${s.kesan}"
+        </p>
+
+      </div>
+    `;
+
     grid.appendChild(c);
   });
 })();
