@@ -940,26 +940,19 @@ $('lb-close').addEventListener('click', () => $('lightbox').classList.remove('op
   btn.addEventListener('click', e=>{ e.stopPropagation(); setPlay(audio.paused); });
 })();
 
-// ── SHARED SIGNATURE ENGINE ───────────────────────────────────
-const SIG_KEY = 'kelas8_signatures';
-const sigCh = typeof BroadcastChannel!=='undefined' ? new BroadcastChannel('kelas8_sig_sync') : null;
+/* ── SHARED SIGNATURE ENGINE (Firebase Firestore realtime) ── */
+let __sigUnsubscribeMobile = null;
 
-const sigLoad = () => { try{ return JSON.parse(localStorage.getItem(SIG_KEY)||'[]'); }catch{ return []; } };
-const sigSave = arr => { try{ localStorage.setItem(SIG_KEY, JSON.stringify(arr)); }catch{} };
-
-function sigDelete(id) {
-  sigSave(sigLoad().filter(s=>s.id!==id));
-  if(sigCh) sigCh.postMessage({type:'delete',id});
-  sigRemoveDOM(id);
-}
-function sigAdd(entry) {
-  const arr = sigLoad(); arr.unshift(entry); sigSave(arr);
-  if(sigCh) sigCh.postMessage({type:'add',entry});
-}
-function sigAddDOM(entry) {
+function sigRenderItem(entry) {
   const grid=$('sigs-grid'), empty=$('sigs-empty'), count=$('sigs-count');
-  if(!grid||document.getElementById('sig-'+entry.id)) return;
+  if(!grid) return;
+
+  // Prevent duplicates on fast updates
+  const existing = document.getElementById('sig-'+entry.id);
+  if(existing) return;
+
   empty.style.display='none';
+
   const div=document.createElement('div');
   div.className='sig-item'; div.id='sig-'+entry.id;
   div.innerHTML=`
@@ -968,21 +961,85 @@ function sigAddDOM(entry) {
     <div class="sig-item-name handwriting">${entry.name}</div>
     <div class="sig-item-date">${entry.date}</div>`;
   grid.prepend(div);
-  count.textContent = sigLoad().length + ' TTD';
+
+  // count is updated from snapshot below
+  if(count) count.textContent = grid.children.length + ' TTD';
 }
-function sigRemoveDOM(id) {
-  document.getElementById('sig-'+id)?.remove();
+
+function sigRenderAll(entries) {
   const grid=$('sigs-grid'), empty=$('sigs-empty'), count=$('sigs-count');
-  const len = sigLoad().length;
-  if(grid&&empty&&grid.children.length===0) empty.style.display='flex';
-  if(count) count.textContent = len + ' TTD';
+  if(!grid || !empty) return;
+  grid.innerHTML = '';
+
+  if(entries.length === 0) {
+    empty.style.display='flex';
+    if(count) count.textContent = '0 TTD';
+    return;
+  }
+
+  empty.style.display='none';
+  entries.forEach(sigRenderItem);
+  if(count) count.textContent = entries.length + ' TTD';
 }
-if(sigCh){
-  sigCh.onmessage=({data})=>{
-    if(data.type==='add') sigAddDOM(data.entry);
-    if(data.type==='delete') sigRemoveDOM(data.id);
-  };
-}
+
+// Expose delete/add for existing inline onclick and signature pad
+window.sigDelete = async function(id) {
+  try {
+    const fb = await import('./firebase-config.js');
+    const db = fb.initFirebase();
+    await fb.deleteDoc(fb.doc(db, 'ttd', String(id)));
+  } catch (e) {
+    console.error('sigDelete failed', e);
+  }
+};
+
+window.sigAdd = async function(entry) {
+  try {
+    const fb = await import('./firebase-config.js');
+    const db = fb.initFirebase();
+
+    const docId = String(entry.id);
+    const payload = {
+      id: docId,
+      nama: entry.name || '',
+      pesan: entry.date || '',
+      posisi: entry.posisi || 'center',
+      warna: entry.warna || '#D4AF37',
+      gambar: entry.image || '',
+      createdAt: fb.serverTimestamp(),
+      updatedAt: fb.serverTimestamp(),
+    };
+
+    const { setDoc, doc } = fb;
+    await setDoc(doc(db, 'ttd', docId), payload);
+  } catch (e) {
+    console.error('sigAdd failed', e);
+  }
+};
+
+(async function initMobileFirestore() {
+  try {
+    const fb = await import('./firebase-config.js');
+    const db = fb.initFirebase();
+    const ttdCol = fb.collection(db, 'ttd');
+    const q = fb.query(ttdCol, fb.orderBy('updatedAt', 'desc'));
+
+    __sigUnsubscribeMobile = fb.onSnapshot(q, (snap) => {
+      const entries = snap.docs.map(d => {
+        const data = d.data() || {};
+        return {
+          id: String(data.id ?? d.id),
+          name: data.nama ?? '',
+          date: data.pesan ?? '',
+          image: data.gambar ?? '',
+        };
+      });
+      sigRenderAll(entries);
+    });
+  } catch (e) {
+    console.error('Firestore init mobile failed:', e);
+  }
+})();
 
 // ── Signature pad ─────────────────────────────────────────────
 (function() {
