@@ -44,7 +44,7 @@
       color: var(--white);
       font-family: 'Inter', sans-serif;
       overflow-x: hidden;
-      cursor: none;
+      cursor: auto;
     }
     @media (hover: none) and (pointer: coarse) { body { cursor: auto; } }
     img { display: block; }
@@ -100,23 +100,6 @@
       color: transparent;
     }
 
-    /* =========================================
-       CUSTOM CURSOR
-    ========================================= */
-    #cursor-dot, #cursor-ring {
-      position: fixed; top: 0; left: 0;
-      pointer-events: none; z-index: 9999;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      transition: transform .1s, width .2s, height .2s, background .2s;
-    }
-    #cursor-dot  { width:10px; height:10px; background:var(--gold); mix-blend-mode:screen; }
-    #cursor-ring { width:36px; height:36px; border:2px solid rgba(212,175,55,.5); transition:all .25s ease; }
-    body:not([data-mobile]) #cursor-dot,
-    body:not([data-mobile]) #cursor-ring { display:block; }
-    @media (hover:none) and (pointer:coarse) {
-      #cursor-dot, #cursor-ring { display:none; }
-    }
 
     /* =========================================
        NAVBAR
@@ -679,8 +662,6 @@
 <!-- ============================================================
      CUSTOM CURSOR
 ============================================================ -->
-<div id="cursor-dot"></div>
-<div id="cursor-ring"></div>
 
 <!-- ============================================================
      MUSIC PLAYER
@@ -1151,29 +1132,6 @@ document.getElementById('year').textContent = new Date().getFullYear();
   }, { passive: true });
 })();
 
-// ─── Custom Cursor ───────────────────────────────────────────
-(function initCursor() {
-  const dot  = document.getElementById('cursor-dot');
-  const ring = document.getElementById('cursor-ring');
-  let rx = 0, ry = 0;
-  window.addEventListener('mousemove', e => {
-    dot.style.left  = e.clientX + 'px';
-    dot.style.top   = e.clientY + 'px';
-    rx += (e.clientX - rx) * .15;
-    ry += (e.clientY - ry) * .15;
-  }, { passive: true });
-  (function frame() {
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
-    requestAnimationFrame(frame);
-  })();
-  document.addEventListener('mouseover', e => {
-    const t = e.target.closest('a,button,[class*="cursor-pointer"]');
-    dot.style.transform  = `translate(-50%,-50%) scale(${t ? .5 : 1})`;
-    ring.style.transform = `translate(-50%,-50%) scale(${t ? 1.6 : 1})`;
-    ring.style.background = t ? 'rgba(212,175,55,.12)' : 'transparent';
-  });
-})();
 
 // ─── Lightbox ────────────────────────────────────────────────
 function openLightbox(src, fallback) {
@@ -1226,75 +1184,141 @@ document.getElementById('lightbox-close').addEventListener('click', () => {
 
 })();
 
-// ─── SHARED SIGNATURE ENGINE ─────────────────────────────────
-// localStorage key: 'kelas8_signatures'
-// BroadcastChannel: 'kelas8_sig_sync'  (real-time antar tab)
-// ─────────────────────────────────────────────────────────────
-const SIG_KEY = 'kelas8_signatures';
-const sigCh   = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('kelas8_sig_sync') : null;
+/* ─── SIGNATURE ENGINE (Firebase Firestore realtime) ──────────
+   Collection: ttd
+   Document schema (required):
+   { id, nama, pesan, posisi, warna, gambar, createdAt, updatedAt }
+   We map existing UI fields:
+   - entry.name  -> nama
+   - entry.date  -> pesan (UI uses `date` string)
+   - entry.image -> gambar (base64 dataURL)
+   - posisi, warna -> default values (no UI change)
+*/ 
 
-// Load dari localStorage → array of {id, name, image, date}
-function sigLoad() {
-  try { return JSON.parse(localStorage.getItem(SIG_KEY) || '[]'); } catch(e) { return []; }
-}
-function sigSave(arr) {
-  try { localStorage.setItem(SIG_KEY, JSON.stringify(arr)); } catch(e) {}
-}
-function sigDelete(id) {
-  const arr = sigLoad().filter(s => s.id !== id);
-  sigSave(arr);
-  if (sigCh) sigCh.postMessage({ type: 'delete', id });
-  renderSigItem_remove(id);
-}
-function sigAdd(entry) {
-  const arr = sigLoad();
-  arr.unshift(entry);
-  sigSave(arr);
-  if (sigCh) sigCh.postMessage({ type: 'add', entry });
-}
+let __sigUnsubscribe = null;
 
-// ── DOM helpers ───────────────────────────────────────────────
-function renderSigItem_add(entry) {
-  const grid  = document.getElementById('sigs-grid');
-  const empty = document.getElementById('sigs-empty');
-  if (!grid) return;
+async function sigInitFirestore() {
+  const fb = await import('./firebase-config.js');
+  const db = fb.initFirebase();
+  const ttdCol = fb.collection(db, 'ttd');
 
-  // Remove existing if any (avoid duplicate on sync)
-  const existing = document.getElementById('sig-' + entry.id);
-  if (existing) return;
+  // Keep DOM render functions as-is (so UI/HTML not changed)
+  function renderSigItem_add(entry) {
+    const grid  = document.getElementById('sigs-grid');
+    const empty = document.getElementById('sigs-empty');
+    if (!grid) return;
 
-  empty.style.display = 'none';
+    // Prevent duplicates
+    const existing = document.getElementById('sig-' + entry.id);
+    if (existing) return;
 
-  const div = document.createElement('div');
-  div.className = 'sig-item';
-  div.id = 'sig-' + entry.id;
-  div.innerHTML = `
-    <button class="sig-del-btn" title="Hapus tanda tangan" onclick="sigDelete('${entry.id}')">✕</button>
-    <div class="sig-item-img"><img src="${entry.image}" alt="${entry.name}" /></div>
-    <div class="sig-item-name handwriting">${entry.name}</div>
-    <div class="sig-item-date">${entry.date}</div>`;
-  grid.prepend(div);
-}
+    empty.style.display = 'none';
 
-function renderSigItem_remove(id) {
-  const el = document.getElementById('sig-' + id);
-  if (el) el.remove();
-  const grid = document.getElementById('sigs-grid');
-  const empty = document.getElementById('sigs-empty');
-  if (grid && empty && grid.children.length === 0) empty.style.display = 'flex';
-}
+    const div = document.createElement('div');
+    div.className = 'sig-item';
+    div.id = 'sig-' + entry.id;
+    div.innerHTML = `
+      <button class="sig-del-btn" title="Hapus tanda tangan" onclick="sigDelete('${entry.id}')">✕</button>
+      <div class="sig-item-img"><img src="${entry.image}" alt="${entry.name}" /></div>
+      <div class="sig-item-name handwriting">${entry.name}</div>
+      <div class="sig-item-date">${entry.date}</div>`;
+    grid.prepend(div);
+  }
 
-function renderAllSigs() {
-  sigLoad().forEach(renderSigItem_add);
-}
+  function renderSigItem_remove(id) {
+    const el = document.getElementById('sig-' + id);
+    if (el) el.remove();
+    const grid = document.getElementById('sigs-grid');
+    const empty = document.getElementById('sigs-empty');
+    if (grid && empty && grid.children.length === 0) empty.style.display = 'flex';
+  }
 
-// ── BroadcastChannel listener (cross-tab sync) ────────────────
-if (sigCh) {
-  sigCh.onmessage = ({ data }) => {
-    if (data.type === 'add')    renderSigItem_add(data.entry);
-    if (data.type === 'delete') renderSigItem_remove(data.id);
+  function clearAllDOM() {
+    const grid = document.getElementById('sigs-grid');
+    const empty = document.getElementById('sigs-empty');
+    if (!grid || !empty) return;
+    grid.innerHTML = '';
+    empty.style.display = 'flex';
+  }
+
+  // Expose delete handler for inline onclick="sigDelete('...')"
+  window.sigDelete = async function(sigId) {
+    try {
+      const { deleteDoc, doc } = fb;
+      // Use id as document id for O(1) delete; we set it on write.
+      await deleteDoc(doc(db, 'ttd', String(sigId)));
+      // DOM updates are driven by onSnapshot()
+    } catch (e) {
+      console.error('sigDelete failed', e);
+    }
   };
+
+  // Expose add helper for signature pad
+  window.sigAdd = async function(entry) {
+    try {
+      const { setDoc, doc, serverTimestamp } = fb;
+
+      const docId = String(entry.id);
+
+      // Map to required Firestore schema
+      const payload = {
+        id: docId,
+        nama: entry.name || '',
+        pesan: entry.date || '',
+        posisi: entry.posisi || 'center',
+        warna: entry.warna || '#D4AF37',
+        gambar: entry.image || '',
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      };
+
+      await setDoc(doc(db, 'ttd', docId), payload);
+      // onSnapshot will re-render list
+    } catch (e) {
+      console.error('sigAdd failed', e);
+    }
+  };
+
+  // Use onSnapshot to render full state to guarantee correct order with minimal DOM complexity
+  // (prepend order is controlled by query ordering)
+  const q = fb.query(ttdCol, fb.orderBy('updatedAt', 'desc'));
+  clearAllDOM();
+
+  __sigUnsubscribe = fb.onSnapshot(q, (snap) => {
+    // Full render to avoid tricky incremental duplicates
+    const grid = document.getElementById('sigs-grid');
+    const empty = document.getElementById('sigs-empty');
+    if (!grid || !empty) return;
+
+    grid.innerHTML = '';
+    const docs = snap.docs;
+
+    if (docs.length === 0) {
+      empty.style.display = 'flex';
+      return;
+    }
+    empty.style.display = 'none';
+
+    docs.forEach(d => {
+      const data = d.data() || {};
+      const entry = {
+        id: String(data.id ?? d.id),
+        name: data.nama ?? '',
+        date: data.pesan ?? '',
+        image: data.gambar ?? '',
+      };
+      renderSigItem_add(entry);
+    });
+
+    // Ensure overlay/list empty state is correct
+    if (grid.children.length === 0) empty.style.display = 'flex';
+  });
 }
+
+// Kick off init (non-module script)
+sigInitFirestore().catch(err => {
+  console.error('Firestore init failed:', err);
+});
 
 // ── Signature Pad ─────────────────────────────────────────────
 (function initSignature() {
